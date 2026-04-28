@@ -64,6 +64,10 @@ table{width:100%;border-collapse:collapse;table-layout:fixed}
 thead{background:var(--surface2)}
 th{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
 td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:middle;font-size:12px;overflow:hidden;text-overflow:ellipsis}
+td:nth-child(6){padding-right:3px}
+td:nth-child(7){padding-left:4px}
+th:nth-child(6){padding-right:3px}
+th:nth-child(7){padding-left:4px}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--surface2)}
 tr.r-late td{background:#FFF8F8}
@@ -107,12 +111,67 @@ tr.r-done td{opacity:.5}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 
+/* ===== CHECKBOX ITEMS (combinados) ===== */
+.items{display:flex;flex-direction:column;gap:5px}
+.item-row{display:flex;align-items:flex-start;gap:8px;line-height:1.4}
+.chk{appearance:none;-webkit-appearance:none;width:16px;height:16px;border:1.5px solid var(--text3);border-radius:5px;background:var(--surface);cursor:pointer;flex-shrink:0;margin-top:1px;transition:all .15s;position:relative}
+.chk:hover{border-color:var(--red)}
+.chk:checked{background:var(--green);border-color:var(--green)}
+.chk:checked::after{content:"";position:absolute;top:1px;left:4px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.chk:disabled{cursor:not-allowed;opacity:.6}
+.item-text{flex:1;min-width:0;color:var(--text1);transition:all .15s;word-break:break-word}
+.item-row.done .item-text{text-decoration:line-through;color:var(--text3);opacity:.7}
+.items-counter{font-size:10px;color:var(--text3);margin-top:5px;font-weight:500}
+
+/* ===== STATUS PILL EXTRAS ===== */
+.pill .pcount{font-weight:500;opacity:.85}
+
+/* ===== REOPEN BUTTON ===== */
+.btn-reopen{background:var(--amber-soft);color:#A66200;border:1px solid #FFD799;border-radius:20px;padding:8px 16px;font-family:var(--font);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;margin-right:auto}
+.btn-reopen:hover{background:#FFE9C7;border-color:var(--amber)}
+
+/* ===== DRAWER (histórico colaborador) ===== */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:120;opacity:0;pointer-events:none;transition:opacity .25s}
+.drawer-overlay.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:440px;max-width:100vw;background:var(--bg);z-index:121;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);box-shadow:-12px 0 32px rgba(0,0,0,.12)}
+.drawer.open{transform:translateX(0)}
+.drawer-header{padding:18px 20px 14px;background:var(--surface);border-bottom:1px solid var(--border)}
+.drawer-close{position:absolute;top:14px;right:14px;background:transparent;border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;color:var(--text3);font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.drawer-close:hover{background:var(--surface2);color:var(--text1)}
+.drawer-name{font-size:18px;font-weight:600;letter-spacing:-0.01em;color:var(--text1);padding-right:32px}
+.drawer-meta{font-size:12px;color:var(--text2);margin-top:4px;display:flex;flex-wrap:wrap;gap:10px}
+.drawer-meta span{display:inline-flex;align-items:center;gap:4px}
+.drawer-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:12px 20px;background:var(--surface);border-bottom:1px solid var(--border)}
+.dsum{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-md);padding:9px 8px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.dsum-num{font-size:18px;font-weight:600;letter-spacing:-0.02em;color:var(--text1);line-height:1.1}
+.dsum.done .dsum-num{color:var(--green)}
+.dsum.miss .dsum-num{color:var(--red)}
+.dsum.rate .dsum-num{color:var(--blue)}
+.dsum-lbl{font-size:9px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.04em;text-align:center;line-height:1.1}
+.drawer-body{flex:1;overflow-y:auto;padding:14px 20px 24px;background:var(--bg)}
+.drawer-empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:12px}
+.tl-entry{position:relative;padding-left:18px;padding-bottom:18px}
+.tl-entry::before{content:"";position:absolute;left:5px;top:6px;bottom:0;width:2px;background:var(--border)}
+.tl-entry:last-child::before{display:none}
+.tl-dot{position:absolute;left:0;top:6px;width:12px;height:12px;border-radius:50%;border:2px solid var(--bg);background:var(--text3)}
+.tl-entry.done .tl-dot{background:var(--green)}
+.tl-entry.partial .tl-dot{background:var(--amber)}
+.tl-entry.late .tl-dot{background:var(--red)}
+.tl-entry.pend .tl-dot{background:var(--blue)}
+.tl-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:12px 14px}
+.tl-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;font-size:11px;color:var(--text2)}
+.tl-date{font-weight:600;color:var(--text1)}
+.tl-prazo{color:var(--text3)}
+
+/* ===== LIDERADO CLICÁVEL ===== */
+.lid-link{cursor:pointer;color:var(--text1);border-bottom:1px dashed transparent;transition:all .15s;display:inline-block}
+.lid-link:hover{color:var(--red);border-bottom-color:var(--red)}
+
 /* ===== LOGIN ===== */
 .login{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:150;padding:20px}
 .login-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:32px 28px;width:100%;max-width:380px;box-shadow:0 8px 32px rgba(0,0,0,.06)}
 .login-brand{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:24px}
-.login-logo{width:44px;height:44px;border-radius:14px;background:var(--red);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:18px;letter-spacing:-0.02em}
-.login-title{font-size:16px;font-weight:600;color:var(--text1)}
+.login-logo{width:200px;max-width:80%;height:auto;display:block}
 .login-sub{font-size:11px;color:var(--text3)}
 .login form{display:flex;flex-direction:column;gap:12px}
 .login label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:5px}
@@ -124,7 +183,8 @@ tr.r-done td{opacity:.5}
 .login-foot{font-size:10px;color:var(--text3);text-align:center;margin-top:20px}
 
 /* ===== USER PILL / TOPBAR ===== */
-.user-pill{display:flex;align-items:center;gap:8px;padding:5px 10px 5px 5px;border-radius:20px;background:var(--surface2);border:1px solid var(--border);cursor:default}
+.user-pill{display:flex;align-items:center;gap:8px;padding:5px 10px 5px 5px;border-radius:20px;background:var(--surface2);border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.user-pill:hover{border-color:var(--red);background:var(--surface)}
 .user-avatar{width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .user-info-text{display:flex;flex-direction:column;line-height:1.2}
 .user-info-text .un{font-size:11px;font-weight:600;color:var(--text1)}
@@ -230,6 +290,15 @@ tr.r-done td{opacity:.5}
   .user-pill{padding:3px;border-radius:50%}
   .login-card{padding:24px 20px}
   .login input{font-size:16px}
+
+  /* Drawer em tela cheia no mobile */
+  .drawer{width:100vw;height:100dvh;border-radius:0}
+  .drawer-summary{grid-template-columns:repeat(2,1fr)}
+  .drawer-body{padding:12px 14px 24px}
+  .drawer-header{padding:16px 16px 12px}
+  .drawer-name{font-size:17px}
+  .btn-reopen{margin-right:0;width:100%;margin-bottom:8px;order:-1}
+  .mfoot{flex-wrap:wrap}
 }
 
 /* ===== MOBILE PEQUENO (≤380px) ===== */
@@ -253,9 +322,7 @@ tr.r-done td{opacity:.5}
 <div class="login" id="login" style="display:none">
   <div class="login-card">
     <div class="login-brand">
-      <div class="login-logo">OD</div>
-      <div class="login-title">Óticas Diniz</div>
-      <div class="login-sub">Controle de Combinados 1:1</div>
+      <img src="logo%20diniz%20png.png" alt="Óticas Diniz" class="login-logo">
     </div>
     <div class="login-err" id="lErr"></div>
     <form onsubmit="doLogin(event)">
@@ -283,7 +350,7 @@ tr.r-done td{opacity:.5}
       <div class="sync"><div class="sdot" id="sdot"></div><span id="stxt">Sincronizado</span></div>
       <button class="btn-new" onclick="openModal()">+ Novo combinado</button>
       <button class="btn-icon admin-only" id="btnUsers" onclick="openUsersModal()" title="Gerenciar usuários" style="display:none">👥</button>
-      <div class="user-pill" title="" id="userPill">
+      <div class="user-pill" title="Minha conta" id="userPill" onclick="openSelfEdit()">
         <div class="user-avatar" id="uAvatar">·</div>
         <div class="user-info-text">
           <span class="un" id="uName">—</span>
@@ -322,7 +389,7 @@ tr.r-done td{opacity:.5}
   <div class="table-area">
     <div class="tcard">
       <table>
-        <colgroup><col style="width:32px"><col style="width:88px"><col style="width:118px"><col style="width:94px"><col style="width:94px"><col><col style="width:94px"><col style="width:82px"><col style="width:96px"><col style="width:78px"></colgroup>
+        <colgroup><col style="width:32px"><col style="width:108px"><col style="width:118px"><col style="width:94px"><col style="width:94px"><col><col style="width:94px"><col style="width:108px"><col style="width:96px"><col style="width:78px"></colgroup>
         <thead><tr>
           <th style="text-align:center">#</th><th>Reunião</th><th>Loja / Setor</th>
           <th>Líder</th><th>Liderado(a)</th><th>Combinado</th>
@@ -361,6 +428,7 @@ tr.r-done td{opacity:.5}
         <div class="fg full"><label>Observação (opcional)</label><input type="text" id="fObs" placeholder="Contexto adicional"></div>
       </div>
       <div class="mfoot">
+        <button class="btn-reopen" id="btnReopen" onclick="reopenItem()" style="display:none">↻ Reabrir card</button>
         <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
         <button class="btn-save" id="btnSave" onclick="saveItem()">Salvar</button>
       </div>
@@ -402,6 +470,10 @@ tr.r-done td{opacity:.5}
           </select>
         </div>
       </div>
+      <div id="cuPwdSection" style="display:none;margin-top:18px;padding-top:14px;border-top:1px solid var(--border)">
+        <div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Senha</div>
+        <button type="button" class="btn-cancel" style="width:100%;padding:10px" onclick="openChangePassword(false)">🔑 Trocar minha senha</button>
+      </div>
       <div id="cuHint" style="font-size:11px;color:var(--text3);margin-top:14px;line-height:1.5">
         💡 O usuário só consegue acessar com <strong>usuário + senha</strong>. Anote a senha e repasse com segurança — você (admin) é quem precisa avisar.
       </div>
@@ -412,13 +484,41 @@ tr.r-done td{opacity:.5}
     </div>
   </div>
 
+  <div class="drawer-overlay" id="drawerOverlay" onclick="closeHistory()"></div>
+  <aside class="drawer" id="drawer">
+    <div class="drawer-header">
+      <button class="drawer-close" onclick="closeHistory()" title="Fechar">×</button>
+      <div class="drawer-name" id="drwName">—</div>
+      <div class="drawer-meta" id="drwMeta"></div>
+    </div>
+    <div class="drawer-summary" id="drwSummary"></div>
+    <div class="drawer-body" id="drwBody"></div>
+  </aside>
+
+  <div class="overlay" id="cpOverlay" style="display:none" onclick="outsideCloseCp(event)">
+    <div class="modal" style="max-width:420px">
+      <div class="mhead"><div class="mdot"></div><span id="cpTitle">Trocar minha senha</span></div>
+      <div id="cpHint" style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.5"></div>
+      <div class="login-err" id="cpErr"></div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px">
+        <div class="fg" id="cpCurWrap"><label>Senha atual</label><input type="password" id="cpCur" autocomplete="current-password"></div>
+        <div class="fg"><label>Nova senha (mín. 6)</label><input type="password" id="cpNew" autocomplete="new-password"></div>
+        <div class="fg"><label>Confirme a nova senha</label><input type="password" id="cpNew2" autocomplete="new-password"></div>
+      </div>
+      <div class="mfoot">
+        <button class="btn-cancel" id="cpCancelBtn" onclick="closeChangePassword()">Cancelar</button>
+        <button class="btn-save" id="cpBtn" onclick="saveNewPassword()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast" style="display:none"></div>
 </div>
 
 <script type="module">
 import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, getDoc, setDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, getDoc, setDoc, onSnapshot, query, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC71cdhIPQMcXMoX6iyvtQqdAZMhcXL3r0",
@@ -432,23 +532,64 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+
+// Persistência offline (cache local para funcionar sem internet e sincronizar ao voltar)
+enableIndexedDbPersistence(db).catch((e)=>{
+  if(e.code==='failed-precondition')console.warn('Offline desativado: outra aba aberta');
+  else if(e.code==='unimplemented')console.warn('Browser não suporta cache offline');
+});
 const COL = "combinados";
 const USERS_COL = "users";
 const EMAIL_DOMAIN = "@diniz.local";
 let items = [], users = [], editId = null, editUserId = null;
 let currentUser = null;
 let unsubItems = null, unsubUsers = null;
+let drawerName = null;
 
 const td = () => new Date().toISOString().slice(0,10);
 function fmt(d){if(!d)return'—';const[y,m,dd]=d.split('-');return`${dd}/${m}/${y}`;}
-function fmtComb(text){
-  if(!text)return'<div style="line-height:1.45">—</div>';
-  const lines=text.split('\n').map(l=>l.replace(/^[•\-\*]\s*/,'').trim()).filter(l=>l);
-  if(lines.length===0)return'<div style="line-height:1.45">—</div>';
-  if(lines.length===1)return`<div style="line-height:1.45">${lines[0]}</div>`;
-  return`<ul style="margin:0;padding-left:16px;line-height:1.5">${lines.map(l=>`<li>${l}</li>`).join('')}</ul>`;
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+// Empacota string segura para usar dentro de onclick="fn(...)" (lida com aspas/apóstrofos)
+function jsAttr(s){return JSON.stringify(String(s||'')).replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+
+// Migração: aceita string (formato antigo) ou array (formato novo)
+function normalizeCombinado(v){
+  if(Array.isArray(v))return v.map(x=>typeof x==='string'?{texto:x,concluido:false}:{texto:x.texto||'',concluido:!!x.concluido});
+  if(typeof v==='string'){
+    const lines=v.split('\n').map(l=>l.replace(/^[•\-\*]\s*/,'').trim()).filter(l=>l);
+    return lines.map(t=>({texto:t,concluido:false}));
+  }
+  return [];
 }
-function getStatus(i){if(i.status==='Concluído')return'Concluído';if(!i.prazo)return'Pendente';const t=td();if(i.prazo<t)return'Atrasado';if(i.prazo===t)return'Vence hoje';return'Pendente';}
+function normalizeItem(it){it.combinado=normalizeCombinado(it.combinado);return it;}
+
+function combProgress(it){
+  const arr=it.combinado||[];
+  const tot=arr.length, ok=arr.filter(x=>x.concluido).length;
+  return {tot,ok};
+}
+
+function fmtComb(it){
+  const arr=it.combinado||[];
+  if(!arr.length)return'<div style="line-height:1.45;color:var(--text3)">—</div>';
+  const html=arr.map((x,idx)=>`
+    <label class="item-row${x.concluido?' done':''}">
+      <input type="checkbox" class="chk" ${x.concluido?'checked':''} onclick="event.stopPropagation();toggleItem('${it.id}',${idx})">
+      <span class="item-text">${esc(x.texto)}</span>
+    </label>`).join('');
+  const {tot,ok}=combProgress(it);
+  const counter=tot>1?`<div class="items-counter">${ok} de ${tot} cumpridos</div>`:'';
+  return `<div class="items">${html}</div>${counter}`;
+}
+
+function getStatus(i){
+  if(i.status==='Concluído')return'Concluído';
+  if(!i.prazo)return'Pendente';
+  const t=td();
+  if(i.prazo<t)return'Atrasado';
+  if(i.prazo===t)return'Vence hoje';
+  return'Pendente';
+}
 
 function setSync(s){
   const dot=document.getElementById('sdot'),txt=document.getElementById('stxt');
@@ -500,15 +641,21 @@ function renderTable(){
       bi=s==='Atrasado'?'⚠':s==='Vence hoje'?'⏰':s==='Pendente'?'🕐':'✓',
       dc=s==='Atrasado'?'dlate':s==='Vence hoje'?'dtoday':'',
       pc=it.loja==='Administrativo'?'ltag admin':'ltag';
+    let pillLabel=s;
+    if(s==='Concluído'){
+      const {tot,ok}=combProgress(it);
+      if(tot)pillLabel=`Concluído <span class="pcount">(${ok}/${tot})</span>`;
+    }
+    const lidCell=it.liderado?`<span class="lid-link" onclick="openHistory(${jsAttr(it.liderado)})">${esc(it.liderado)}</span>`:'—';
     return`<tr class="${rc}">
       <td style="text-align:center;color:var(--text3);font-size:10px">${idx+1}</td>
       <td><span class="dmono">${fmt(it.dataReuniao)}</span></td>
       <td><span class="${pc}">${it.loja||'—'}</span></td>
-      <td>${it.lider||'—'}</td><td>${it.liderado||'—'}</td>
-      <td>${fmtComb(it.combinado)}${it.obs?`<div style="font-size:10px;color:var(--text3);margin-top:2px">${it.obs}</div>`:''}</td>
-      <td style="color:var(--text2)">${it.responsavel||'—'}</td>
+      <td>${esc(it.lider)||'—'}</td><td>${lidCell}</td>
+      <td>${fmtComb(it)}${it.obs?`<div style="font-size:10px;color:var(--text3);margin-top:6px">${esc(it.obs)}</div>`:''}</td>
+      <td style="color:var(--text2)">${esc(it.responsavel)||'—'}</td>
       <td><span class="dmono ${dc}">${fmt(it.prazo)}</span></td>
-      <td><span class="pill ${bc}">${bi} ${s}</span></td>
+      <td><span class="pill ${bc}">${bi} ${pillLabel}</span></td>
       <td><div class="act">
         ${s!=='Concluído'?`<button class="abtn ok" onclick="_done('${it.id}')">✓</button>`:''}
         <button class="abtn" onclick="_edit('${it.id}')">✏</button>
@@ -530,6 +677,9 @@ onAuthStateChanged(auth, async (user)=>{
       currentUser={uid:user.uid,...profSnap.data()};
       showApp();
       setupListeners();
+      if(currentUser.senhaInicial===true){
+        setTimeout(()=>openChangePassword(true),100);
+      }
     }catch(e){ console.error(e); showLogin('Erro ao carregar perfil.'); }
   }else{
     currentUser=null;
@@ -598,12 +748,13 @@ function showApp(){
 // ===== REALTIME =====
 function setupListeners(){
   unsubItems=onSnapshot(query(collection(db,COL)),(snap)=>{
-    let arr=snap.docs.map(d=>({id:d.id,...d.data()}));
+    let arr=snap.docs.map(d=>normalizeItem({id:d.id,...d.data()}));
     if(currentUser.role==='gerente'){
       arr=arr.filter(i=>i.loja===currentUser.loja && i.criadoPor);
     }
     items=arr;
     render();
+    if(drawerName)renderHistory(drawerName);
     setSync('ok');
   },(e)=>{ console.error(e); setSync('error'); });
 
@@ -637,10 +788,14 @@ window.openModal=function(id=null){
   }
   document.getElementById('fLider').value=it?.lider||'';
   document.getElementById('fLiderado').value=it?.liderado||'';
-  document.getElementById('fComb').value=it?.combinado||'';
+  // Combinado: array → texto (uma linha por item) para o textarea
+  const combArr=it?.combinado||[];
+  document.getElementById('fComb').value=combArr.map(x=>'• '+x.texto).join('\n');
   document.getElementById('fResp').value=it?.responsavel||'';
   document.getElementById('fPrazo').value=it?.prazo||'';
   document.getElementById('fObs').value=it?.obs||'';
+  // Reabrir só aparece para cards já concluídos
+  document.getElementById('btnReopen').style.display=(it?.status==='Concluído')?'':'none';
   document.getElementById('overlay').style.display='flex';
 };
 window.closeModal=function(){document.getElementById('overlay').style.display='none';editId=null;};
@@ -648,20 +803,30 @@ window.outsideClose=function(e){if(e.target.id==='overlay')closeModal();};
 
 window.saveItem=async function(){
   const rawComb=document.getElementById('fComb').value;
-  const comb=rawComb.split('\n').map(l=>l.trimEnd()).filter(l=>l.replace(/^[•\-\*]\s*/,'').trim()!=='').join('\n').trim();
+  const lines=rawComb.split('\n').map(l=>l.replace(/^[•\-\*]\s*/,'').trim()).filter(l=>l);
   const loja=currentUser.role==='gerente'?currentUser.loja:document.getElementById('fLoja').value;
-  if(!comb){toast('Preencha o campo Combinado.');return;}
+  if(!lines.length){toast('Adicione ao menos um item de combinado.');return;}
   if(!loja){toast('Selecione a loja.');return;}
   document.getElementById('btnSave').disabled=true;setSync('load');
   const existing=editId?items.find(i=>i.id===editId):null;
+  // Preserva estado dos checkboxes: se o texto bate com um item existente, mantém o concluido
+  const prevArr=existing?.combinado||[];
+  const combArr=lines.map(t=>{
+    const prev=prevArr.find(x=>x.texto===t);
+    return {texto:t,concluido:prev?.concluido||false};
+  });
+  // Auto-conclude: se todos os itens estiverem checados, marca como Concluído
+  const allChecked=combArr.length>0 && combArr.every(x=>x.concluido);
+  const newStatus=allChecked?'Concluído':(existing?.status||'Pendente');
   const data={
     dataReuniao:document.getElementById('fData').value,loja,
     lider:document.getElementById('fLider').value.trim(),
     liderado:document.getElementById('fLiderado').value.trim(),
-    combinado:comb,responsavel:document.getElementById('fResp').value.trim(),
+    combinado:combArr,
+    responsavel:document.getElementById('fResp').value.trim(),
     prazo:document.getElementById('fPrazo').value,
     obs:document.getElementById('fObs').value.trim(),
-    status:existing?.status||'Pendente',
+    status:newStatus,
     criadoEm:existing?.criadoEm||new Date().toISOString(),
     criadoPor:existing?.criadoPor||currentUser.uid,
     criadoPorNome:existing?.criadoPorNome||currentUser.nome,
@@ -675,6 +840,128 @@ window.saveItem=async function(){
   }catch(e){toast('Erro ao salvar. Verifique a conexão.');setSync('error');}
   document.getElementById('btnSave').disabled=false;
 };
+
+window.toggleItem=async function(id,idx){
+  const it=items.find(x=>x.id===id);
+  if(!it||!it.combinado[idx])return;
+  // Atualização otimista (UI primeiro, sync depois)
+  it.combinado[idx].concluido=!it.combinado[idx].concluido;
+  const {tot,ok}=combProgress(it);
+  const data={
+    combinado:it.combinado,
+    atualizadoEm:new Date().toISOString(),
+    atualizadoPor:currentUser.uid
+  };
+  // Auto-conclude: todos marcados → Concluído
+  if(tot>0 && ok===tot && it.status!=='Concluído'){
+    data.status='Concluído';
+    it.status='Concluído';
+  }
+  render();
+  if(drawerName)renderHistory(drawerName);
+  setSync('load');
+  try{
+    await updateDoc(doc(db,COL,id),data);
+    setSync('ok');
+  }catch(e){
+    console.error(e);
+    // Reverte em caso de erro
+    it.combinado[idx].concluido=!it.combinado[idx].concluido;
+    if(data.status){it.status=data.status==='Concluído'?'Pendente':it.status;}
+    render();
+    if(drawerName)renderHistory(drawerName);
+    toast('Erro ao salvar. Verifique conexão.');
+    setSync('error');
+  }
+};
+
+window.reopenItem=async function(){
+  if(!editId)return;
+  if(!confirm('Reabrir este card? O status volta para Pendente (ou Atrasado, se passar do prazo).'))return;
+  setSync('load');
+  try{
+    await updateDoc(doc(db,COL,editId),{
+      status:'Pendente',
+      atualizadoEm:new Date().toISOString(),
+      atualizadoPor:currentUser.uid
+    });
+    toast('Card reaberto.');
+    closeModal();
+  }catch(e){console.error(e);toast('Erro ao reabrir.');setSync('error');}
+};
+
+// ===== DRAWER (histórico do colaborador) =====
+window.openHistory=function(name){
+  if(!name)return;
+  drawerName=name;
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+  renderHistory(name);
+  document.body.style.overflow='hidden';
+};
+window.closeHistory=function(){
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  drawerName=null;
+  document.body.style.overflow='';
+};
+
+function renderHistory(name){
+  const arr=items.filter(i=>i.liderado===name)
+                 .sort((a,b)=>(b.dataReuniao||'').localeCompare(a.dataReuniao||''));
+  document.getElementById('drwName').textContent=name;
+  const recent=arr[0];
+  const loja=recent?.loja||'';
+  const lider=recent?.lider||'';
+  document.getElementById('drwMeta').innerHTML=
+    (loja?`<span>📍 ${esc(loja)}</span>`:'')+
+    (lider?`<span>👤 Líder: ${esc(lider)}</span>`:'');
+
+  // Métricas
+  let totItems=0, okItems=0, missItems=0, totDoneItems=0;
+  arr.forEach(it=>{
+    const {tot,ok}=combProgress(it);
+    totItems+=tot;
+    okItems+=ok;
+    if(it.status==='Concluído'){
+      missItems+=Math.max(0,tot-ok);
+      totDoneItems+=tot;
+    }
+  });
+  const rate=totDoneItems>0?Math.round(okItems*100/totDoneItems):0;
+  document.getElementById('drwSummary').innerHTML=`
+    <div class="dsum"><div class="dsum-num">${totItems}</div><div class="dsum-lbl">Total itens</div></div>
+    <div class="dsum done"><div class="dsum-num">${okItems}</div><div class="dsum-lbl">Cumpridos</div></div>
+    <div class="dsum miss"><div class="dsum-num">${missItems}</div><div class="dsum-lbl">Não cumpr.</div></div>
+    <div class="dsum rate"><div class="dsum-num">${rate}%</div><div class="dsum-lbl">Taxa</div></div>`;
+
+  // Timeline
+  const body=document.getElementById('drwBody');
+  if(!arr.length){body.innerHTML='<div class="drawer-empty">Nenhum registro encontrado.</div>';return;}
+  body.innerHTML=arr.map(it=>{
+    const s=getStatus(it);
+    const {tot,ok}=combProgress(it);
+    const cls=s==='Concluído'?(tot>0&&ok===tot?'done':'partial'):s==='Atrasado'?'late':s==='Vence hoje'?'partial':'pend';
+    const pillCls=s==='Atrasado'?'p-late':s==='Vence hoje'?'p-today':s==='Pendente'?'p-pend':'p-done';
+    const pillLabel=s==='Concluído'&&tot?`Concluído (${ok}/${tot})`:s;
+    const itemsHtml=(it.combinado||[]).map(x=>`
+      <div class="item-row${x.concluido?' done':''}">
+        <input type="checkbox" class="chk" ${x.concluido?'checked':''} disabled>
+        <span class="item-text">${esc(x.texto)}</span>
+      </div>`).join('');
+    return `<div class="tl-entry ${cls}">
+      <div class="tl-dot"></div>
+      <div class="tl-card">
+        <div class="tl-head">
+          <span class="tl-date">${fmt(it.dataReuniao)}</span>
+          <span class="pill ${pillCls}">${pillLabel}</span>
+        </div>
+        <div class="items">${itemsHtml||'<div style="color:var(--text3);font-size:11px">Sem itens</div>'}</div>
+        ${it.prazo?`<div class="tl-prazo" style="margin-top:8px;font-size:11px">Prazo: <strong>${fmt(it.prazo)}</strong></div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
 
 window._edit=function(id){openModal(id);};
 window._del=async function(id){
@@ -733,11 +1020,17 @@ window.toggleLojaField=function(){
 
 function openUserModal(uid){
   editUserId=uid;
-  const u=uid?users.find(x=>x.id===uid||x.uid===uid):null;
+  // Self-edit: usa currentUser direto (gerente não tem o array `users` carregado)
+  let u=null;
+  if(uid){
+    if(uid===currentUser.uid)u=currentUser;
+    else u=users.find(x=>x.id===uid||x.uid===uid);
+  }
   const isEdit=!!u;
   const isSelf=isEdit && u.uid===currentUser.uid;
+  const isGerenteSelf=isSelf && currentUser.role==='gerente';
 
-  document.getElementById('cuTitle').textContent=isEdit?'Editar usuário':'Novo usuário';
+  document.getElementById('cuTitle').textContent=isSelf?'Minha conta':(isEdit?'Editar usuário':'Novo usuário');
   document.getElementById('cuBtn').textContent=isEdit?'Salvar':'Criar';
 
   document.getElementById('cuNome').value=u?.nome||'';
@@ -762,21 +1055,51 @@ function openUserModal(uid){
   // Senha só na criação
   document.getElementById('cuPassWrap').style.display=isEdit?'none':'flex';
 
+  // Seção de troca da própria senha (visível só em self-edit)
+  document.getElementById('cuPwdSection').style.display=isSelf?'block':'none';
+
   // Role: bloqueado em self-edit (admin não pode rebaixar a si mesmo)
   const roleSel=document.getElementById('cuRole');
   if(isSelf){roleSel.setAttribute('disabled','');roleSel.title='Você não pode alterar o próprio perfil.';}
   else{roleSel.removeAttribute('disabled');roleSel.title='';}
 
+  // Nome e Loja: travados para gerente self-edit (rules do Firestore não permitem alterar mesmo)
+  const nomeInput=document.getElementById('cuNome');
+  const lojaSel=document.getElementById('cuLoja');
+  if(isGerenteSelf){
+    nomeInput.setAttribute('readonly','');
+    nomeInput.title='Apenas o admin pode alterar seu nome.';
+    lojaSel.setAttribute('disabled','');
+    lojaSel.title='Apenas o admin pode trocar sua loja.';
+  }else{
+    nomeInput.removeAttribute('readonly');
+    nomeInput.title='';
+    lojaSel.removeAttribute('disabled');
+    lojaSel.title='';
+  }
+
+  // Botão Salvar: escondido para gerente self-edit (nada para salvar — só troca de senha)
+  document.getElementById('cuBtn').style.display=isGerenteSelf?'none':'';
+
   // Mensagem de rodapé
   document.getElementById('cuHint').innerHTML=isEdit
-    ? (isSelf
-        ? '✏️ Editando seu próprio perfil. Você pode alterar apenas o nome — perfil e login estão travados.'
-        : '✏️ Edite os dados do usuário. Login e senha não podem ser alterados aqui.')
+    ? (isGerenteSelf
+        ? 'ℹ️ Você pode alterar sua senha aqui. Para mudar nome ou loja, peça ao administrador.'
+        : (isSelf
+          ? '✏️ Editando seu próprio perfil. Você pode alterar o nome — perfil e login estão travados.'
+          : '✏️ Edite os dados do usuário. Login e senha não podem ser alterados aqui.'))
     : '💡 O usuário só consegue acessar com <strong>usuário + senha</strong>. Anote a senha e repasse com segurança — você (admin) é quem precisa avisar.';
 
   toggleLojaField();
+  // Para gerente self-edit, força mostrar o campo loja (mesmo "disabled") porque toggleLojaField esconde se role!=='gerente'
+  if(isGerenteSelf)document.getElementById('cuLojaWrap').style.display='flex';
   document.getElementById('cuOverlay').style.display='flex';
 }
+
+window.openSelfEdit=function(){
+  if(!currentUser)return;
+  openUserModal(currentUser.uid);
+};
 
 function renderUsers(){
   const el=document.getElementById('usersList');
@@ -859,7 +1182,8 @@ window.saveUser=async function(){
       uid,username,nome,role,
       loja:role==='gerente'?loja:null,
       criadoEm:new Date().toISOString(),
-      criadoPor:currentUser.uid
+      criadoPor:currentUser.uid,
+      senhaInicial:true
     });
     await signOut(secAuth);
     toast('Usuário criado com sucesso!');
@@ -885,6 +1209,85 @@ window._delUser=async function(uid,nome){
     await deleteDoc(doc(db,USERS_COL,uid));
     toast('Usuário removido.');
   }catch(e){console.error(e);toast('Erro ao remover.');}
+};
+
+// ===== TROCA DE SENHA =====
+let cpForced=false;
+
+window.openChangePassword=function(forced){
+  cpForced=!!forced;
+  const cancelBtn=document.getElementById('cpCancelBtn');
+  const curWrap=document.getElementById('cpCurWrap');
+  const title=document.getElementById('cpTitle');
+  const hint=document.getElementById('cpHint');
+  document.getElementById('cpCur').value='';
+  document.getElementById('cpNew').value='';
+  document.getElementById('cpNew2').value='';
+  document.getElementById('cpErr').style.display='none';
+  if(cpForced){
+    title.textContent='Defina sua senha pessoal';
+    hint.innerHTML='Antes de continuar, escolha uma senha pessoal. A senha atual foi definida pelo administrador e precisa ser substituída.';
+    curWrap.style.display='none';
+    cancelBtn.style.display='none';
+  }else{
+    title.textContent='Trocar minha senha';
+    hint.innerHTML='Por segurança, confirme sua senha atual antes de definir uma nova.';
+    curWrap.style.display='flex';
+    cancelBtn.style.display='';
+  }
+  document.getElementById('cpOverlay').style.display='flex';
+  setTimeout(()=>document.getElementById(cpForced?'cpNew':'cpCur').focus(),50);
+};
+window.closeChangePassword=function(){
+  if(cpForced)return;
+  document.getElementById('cpOverlay').style.display='none';
+};
+window.outsideCloseCp=function(e){if(e.target.id==='cpOverlay')closeChangePassword();};
+
+function showCpErr(msg){
+  const e=document.getElementById('cpErr');
+  e.textContent=msg; e.style.display='block';
+}
+
+window.saveNewPassword=async function(){
+  const cur=document.getElementById('cpCur').value;
+  const n1=document.getElementById('cpNew').value;
+  const n2=document.getElementById('cpNew2').value;
+  if(n1.length<6){showCpErr('A nova senha deve ter ao menos 6 caracteres.');return;}
+  if(n1!==n2){showCpErr('A confirmação não bate com a nova senha.');return;}
+  if(!cpForced && !cur){showCpErr('Informe sua senha atual.');return;}
+  if(!cpForced && cur===n1){showCpErr('A nova senha deve ser diferente da atual.');return;}
+
+  document.getElementById('cpBtn').disabled=true;
+  document.getElementById('cpBtn').textContent='Salvando...';
+  const user=auth.currentUser;
+  try{
+    if(!cpForced){
+      const cred=EmailAuthProvider.credential(user.email,cur);
+      await reauthenticateWithCredential(user,cred);
+    }
+    await updatePassword(user,n1);
+    if(cpForced){
+      await updateDoc(doc(db,USERS_COL,currentUser.uid),{
+        senhaInicial:false,
+        atualizadoEm:new Date().toISOString()
+      });
+      currentUser.senhaInicial=false;
+    }
+    cpForced=false;
+    document.getElementById('cpOverlay').style.display='none';
+    toast('Senha alterada com sucesso!');
+  }catch(e){
+    console.error(e);
+    const c=e.code||'';
+    if(c.includes('wrong-password')||c.includes('invalid-credential'))showCpErr('Senha atual incorreta.');
+    else if(c.includes('weak-password'))showCpErr('Senha muito fraca.');
+    else if(c.includes('requires-recent-login'))showCpErr('Sessão expirada. Faça login novamente e tente.');
+    else showCpErr('Não foi possível alterar a senha. Tente novamente.');
+  }finally{
+    document.getElementById('cpBtn').disabled=false;
+    document.getElementById('cpBtn').textContent='Salvar';
+  }
 };
 </script>
 </body>
