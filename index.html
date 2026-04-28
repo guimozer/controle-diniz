@@ -64,10 +64,6 @@ table{width:100%;border-collapse:collapse;table-layout:fixed}
 thead{background:var(--surface2)}
 th{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
 td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:middle;font-size:12px;overflow:hidden;text-overflow:ellipsis}
-td:nth-child(6){padding-right:3px}
-td:nth-child(7){padding-left:4px}
-th:nth-child(6){padding-right:3px}
-th:nth-child(7){padding-left:4px}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--surface2)}
 tr.r-late td{background:#FFF8F8}
@@ -122,6 +118,22 @@ tr.r-done td{opacity:.5}
 .item-text{flex:1;min-width:0;color:var(--text1);transition:all .15s;word-break:break-word}
 .item-row.done .item-text{text-decoration:line-through;color:var(--text3);opacity:.7}
 .items-counter{font-size:10px;color:var(--text3);margin-top:5px;font-weight:500}
+
+/* Blocos Liderado / Gestor dentro da célula Combinado */
+.block{margin:0;min-width:0}
+.block + .block{margin-top:9px;padding-top:9px;border-top:1px dashed var(--border)}
+.block-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.block-label.lid{color:var(--red)}
+.block-label.ges{color:var(--text3)}
+.item-row.gestor{color:var(--text2)}
+.item-row.gestor .item-text{color:var(--text2)}
+.bul{color:var(--text3);margin-right:6px;flex-shrink:0;margin-top:1px}
+
+/* Layout lado a lado (tabela): liderado 60% / gestor 40%, separador vertical */
+.blocks-row{display:flex;gap:14px;align-items:flex-start}
+.blocks-row .block.lid{flex:3}
+.blocks-row .block.ges{flex:2}
+.blocks-row .block + .block{margin-top:0;padding-top:0;border-top:none;padding-left:14px;border-left:1px dashed var(--border)}
 
 /* ===== STATUS PILL EXTRAS ===== */
 .pill .pcount{font-weight:500;opacity:.85}
@@ -245,7 +257,6 @@ tr.r-done td{opacity:.5}
       "lider lider   lider"
       "lidd  lidd    lidd"
       "comb  comb    comb"
-      "resp  resp    resp"
       "prazo prazo   actions";
     gap:6px 10px;
     padding:14px;
@@ -266,13 +277,11 @@ tr.r-done td{opacity:.5}
   .tcard td:nth-child(5){grid-area:lidd;font-size:12px}
   .tcard td:nth-child(5)::before{content:"Liderado: ";font-weight:600;color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.04em;margin-right:4px}
   .tcard td:nth-child(6){grid-area:comb;padding:8px 0;border-top:1px dashed var(--border);border-bottom:1px dashed var(--border);font-size:13px}
-  .tcard td:nth-child(7){grid-area:resp;font-size:12px;color:var(--text2)}
-  .tcard td:nth-child(7)::before{content:"Resp: ";font-weight:600;color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.04em;margin-right:4px}
-  .tcard td:nth-child(8){grid-area:prazo;font-size:12px}
-  .tcard td:nth-child(8)::before{content:"Prazo: ";font-weight:600;color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.04em;margin-right:4px}
-  .tcard td:nth-child(9){grid-area:status;justify-self:end;align-self:center}
-  .tcard td:nth-child(10){grid-area:actions;justify-self:end}
-  .tcard td:nth-child(10) .act{justify-content:flex-end}
+  .tcard td:nth-child(7){grid-area:prazo;font-size:12px}
+  .tcard td:nth-child(7)::before{content:"Prazo: ";font-weight:600;color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.04em;margin-right:4px}
+  .tcard td:nth-child(8){grid-area:status;justify-self:end;align-self:center}
+  .tcard td:nth-child(9){grid-area:actions;justify-self:end}
+  .tcard td:nth-child(9) .act{justify-content:flex-end}
 
   /* Botões de ação maiores p/ toque */
   .abtn{width:34px;height:34px;font-size:14px}
@@ -389,11 +398,11 @@ tr.r-done td{opacity:.5}
   <div class="table-area">
     <div class="tcard">
       <table>
-        <colgroup><col style="width:32px"><col style="width:108px"><col style="width:118px"><col style="width:94px"><col style="width:94px"><col><col style="width:94px"><col style="width:108px"><col style="width:96px"><col style="width:78px"></colgroup>
+        <colgroup><col style="width:32px"><col style="width:108px"><col style="width:118px"><col style="width:94px"><col style="width:94px"><col><col style="width:108px"><col style="width:96px"><col style="width:78px"></colgroup>
         <thead><tr>
           <th style="text-align:center">#</th><th>Reunião</th><th>Loja / Setor</th>
           <th>Líder</th><th>Liderado(a)</th><th>Combinado</th>
-          <th>Responsável</th><th>Prazo</th><th>Status</th><th style="text-align:center">Ações</th>
+          <th>Prazo</th><th>Status</th><th style="text-align:center">Ações</th>
         </tr></thead>
         <tbody id="tbody"></tbody>
       </table>
@@ -422,9 +431,17 @@ tr.r-done td{opacity:.5}
         </div>
         <div class="fg"><label>Líder</label><input type="text" id="fLider" placeholder="Nome do líder"></div>
         <div class="fg"><label>Liderado(a)</label><input type="text" id="fLiderado" placeholder="Nome do colaborador"></div>
-        <div class="fg full"><label>Combinados / Ações</label><textarea id="fComb" placeholder="• Pressione Enter para adicionar outro tópico..."></textarea></div>
-        <div class="fg"><label>Responsável</label><input type="text" id="fResp" placeholder="Quem executa"></div>
-        <div class="fg"><label>Data-limite</label><input type="date" id="fPrazo"></div>
+        <div class="fg full">
+          <label>Combinados do Liderado <span style="color:var(--red);text-transform:none;letter-spacing:0">*</span></label>
+          <textarea id="fCombLid" placeholder="• Pressione Enter para adicionar outro tópico..."></textarea>
+          <small style="font-size:10px;color:var(--text3);margin-top:4px;font-weight:400;text-transform:none;letter-spacing:0">Cada linha vira um item com checkbox. Status do card depende destes itens.</small>
+        </div>
+        <div class="fg full">
+          <label>Combinados do Gestor <span style="color:var(--text3);text-transform:none;letter-spacing:0">— opcional</span></label>
+          <textarea id="fCombGes" placeholder="O que você (gestor) se comprometeu com o liderado..."></textarea>
+          <small style="font-size:10px;color:var(--text3);margin-top:4px;font-weight:400;text-transform:none;letter-spacing:0">Sem checkbox — apenas registro do que o gestor prometeu.</small>
+        </div>
+        <div class="fg full"><label>Data-limite</label><input type="date" id="fPrazo"></div>
         <div class="fg full"><label>Observação (opcional)</label><input type="text" id="fObs" placeholder="Contexto adicional"></div>
       </div>
       <div class="mfoot">
@@ -553,33 +570,95 @@ function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 function jsAttr(s){return JSON.stringify(String(s||'')).replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 
 // Migração: aceita string (formato antigo) ou array (formato novo)
-function normalizeCombinado(v){
-  if(Array.isArray(v))return v.map(x=>typeof x==='string'?{texto:x,concluido:false}:{texto:x.texto||'',concluido:!!x.concluido});
+function normalizeArr(v,withCheck){
+  if(Array.isArray(v)){
+    return v.map(x=>{
+      if(typeof x==='string')return withCheck?{texto:x,concluido:false}:{texto:x};
+      return withCheck?{texto:x.texto||'',concluido:!!x.concluido}:{texto:x.texto||''};
+    });
+  }
   if(typeof v==='string'){
     const lines=v.split('\n').map(l=>l.replace(/^[•\-\*]\s*/,'').trim()).filter(l=>l);
-    return lines.map(t=>({texto:t,concluido:false}));
+    return lines.map(t=>withCheck?{texto:t,concluido:false}:{texto:t});
   }
   return [];
 }
-function normalizeItem(it){it.combinado=normalizeCombinado(it.combinado);return it;}
+function normalizeItem(it){
+  // Liderado: prefere campo novo, fallback para o antigo `combinado`
+  if(it.combinadosLiderado!==undefined)it.combinadosLiderado=normalizeArr(it.combinadosLiderado,true);
+  else it.combinadosLiderado=normalizeArr(it.combinado,true);
+  // Gestor: novo campo (sem checkbox)
+  it.combinadosGestor=normalizeArr(it.combinadosGestor,false);
+  return it;
+}
 
 function combProgress(it){
-  const arr=it.combinado||[];
+  const arr=it.combinadosLiderado||[];
   const tot=arr.length, ok=arr.filter(x=>x.concluido).length;
   return {tot,ok};
 }
 
 function fmtComb(it){
-  const arr=it.combinado||[];
-  if(!arr.length)return'<div style="line-height:1.45;color:var(--text3)">—</div>';
-  const html=arr.map((x,idx)=>`
-    <label class="item-row${x.concluido?' done':''}">
-      <input type="checkbox" class="chk" ${x.concluido?'checked':''} onclick="event.stopPropagation();toggleItem('${it.id}',${idx})">
-      <span class="item-text">${esc(x.texto)}</span>
-    </label>`).join('');
-  const {tot,ok}=combProgress(it);
-  const counter=tot>1?`<div class="items-counter">${ok} de ${tot} cumpridos</div>`:'';
-  return `<div class="items">${html}</div>${counter}`;
+  const lid=it.combinadosLiderado||[];
+  const ges=it.combinadosGestor||[];
+  if(!lid.length && !ges.length)return'<div style="color:var(--text3);line-height:1.45">—</div>';
+  let html='';
+  if(lid.length){
+    const items=lid.map((x,idx)=>`
+      <label class="item-row${x.concluido?' done':''}">
+        <input type="checkbox" class="chk" ${x.concluido?'checked':''} onclick="event.stopPropagation();toggleItem('${it.id}',${idx})">
+        <span class="item-text">${esc(x.texto)}</span>
+      </label>`).join('');
+    const {tot,ok}=combProgress(it);
+    const counter=tot>1?`<div class="items-counter">${ok} de ${tot} cumpridos</div>`:'';
+    html+=`<div class="block lid">
+      <div class="block-label lid">LIDERADO</div>
+      <div class="items">${items}</div>
+      ${counter}
+    </div>`;
+  }
+  if(ges.length){
+    const items=ges.map(x=>`
+      <div class="item-row gestor">
+        <span class="bul">•</span>
+        <span class="item-text">${esc(x.texto)}</span>
+      </div>`).join('');
+    html+=`<div class="block ges">
+      <div class="block-label ges">GESTOR</div>
+      <div class="items">${items}</div>
+    </div>`;
+  }
+  return `<div class="blocks-row">${html}</div>`;
+}
+
+// Versão read-only (sem onclick) para o drawer de histórico
+function fmtCombReadonly(it){
+  const lid=it.combinadosLiderado||[];
+  const ges=it.combinadosGestor||[];
+  let html='';
+  if(lid.length){
+    const items=lid.map(x=>`
+      <div class="item-row${x.concluido?' done':''}">
+        <input type="checkbox" class="chk" ${x.concluido?'checked':''} disabled>
+        <span class="item-text">${esc(x.texto)}</span>
+      </div>`).join('');
+    html+=`<div class="block">
+      <div class="block-label lid">LIDERADO</div>
+      <div class="items">${items}</div>
+    </div>`;
+  }
+  if(ges.length){
+    const items=ges.map(x=>`
+      <div class="item-row gestor">
+        <span class="bul">•</span>
+        <span class="item-text">${esc(x.texto)}</span>
+      </div>`).join('');
+    html+=`<div class="block">
+      <div class="block-label ges">GESTOR</div>
+      <div class="items">${items}</div>
+    </div>`;
+  }
+  return html||'<div style="color:var(--text3);font-size:11px">Sem itens</div>';
 }
 
 function getStatus(i){
@@ -653,7 +732,6 @@ function renderTable(){
       <td><span class="${pc}">${it.loja||'—'}</span></td>
       <td>${esc(it.lider)||'—'}</td><td>${lidCell}</td>
       <td>${fmtComb(it)}${it.obs?`<div style="font-size:10px;color:var(--text3);margin-top:6px">${esc(it.obs)}</div>`:''}</td>
-      <td style="color:var(--text2)">${esc(it.responsavel)||'—'}</td>
       <td><span class="dmono ${dc}">${fmt(it.prazo)}</span></td>
       <td><span class="pill ${bc}">${bi} ${pillLabel}</span></td>
       <td><div class="act">
@@ -788,10 +866,11 @@ window.openModal=function(id=null){
   }
   document.getElementById('fLider').value=it?.lider||'';
   document.getElementById('fLiderado').value=it?.liderado||'';
-  // Combinado: array → texto (uma linha por item) para o textarea
-  const combArr=it?.combinado||[];
-  document.getElementById('fComb').value=combArr.map(x=>'• '+x.texto).join('\n');
-  document.getElementById('fResp').value=it?.responsavel||'';
+  // Dois blocos de combinados, separados por bullet
+  const lidArr=it?.combinadosLiderado||[];
+  const gesArr=it?.combinadosGestor||[];
+  document.getElementById('fCombLid').value=lidArr.map(x=>'• '+x.texto).join('\n');
+  document.getElementById('fCombGes').value=gesArr.map(x=>'• '+x.texto).join('\n');
   document.getElementById('fPrazo').value=it?.prazo||'';
   document.getElementById('fObs').value=it?.obs||'';
   // Reabrir só aparece para cards já concluídos
@@ -802,28 +881,29 @@ window.closeModal=function(){document.getElementById('overlay').style.display='n
 window.outsideClose=function(e){if(e.target.id==='overlay')closeModal();};
 
 window.saveItem=async function(){
-  const rawComb=document.getElementById('fComb').value;
-  const lines=rawComb.split('\n').map(l=>l.replace(/^[•\-\*]\s*/,'').trim()).filter(l=>l);
+  const lidLines=document.getElementById('fCombLid').value.split('\n').map(l=>l.replace(/^[•\-\*]\s*/,'').trim()).filter(l=>l);
+  const gesLines=document.getElementById('fCombGes').value.split('\n').map(l=>l.replace(/^[•\-\*]\s*/,'').trim()).filter(l=>l);
   const loja=currentUser.role==='gerente'?currentUser.loja:document.getElementById('fLoja').value;
-  if(!lines.length){toast('Adicione ao menos um item de combinado.');return;}
+  if(!lidLines.length){toast('Adicione ao menos um combinado do liderado.');return;}
   if(!loja){toast('Selecione a loja.');return;}
   document.getElementById('btnSave').disabled=true;setSync('load');
   const existing=editId?items.find(i=>i.id===editId):null;
-  // Preserva estado dos checkboxes: se o texto bate com um item existente, mantém o concluido
-  const prevArr=existing?.combinado||[];
-  const combArr=lines.map(t=>{
-    const prev=prevArr.find(x=>x.texto===t);
+  // Preserva estado dos checkboxes do liderado quando o texto bater
+  const prevLid=existing?.combinadosLiderado||[];
+  const lidArr=lidLines.map(t=>{
+    const prev=prevLid.find(x=>x.texto===t);
     return {texto:t,concluido:prev?.concluido||false};
   });
-  // Auto-conclude: se todos os itens estiverem checados, marca como Concluído
-  const allChecked=combArr.length>0 && combArr.every(x=>x.concluido);
+  const gesArr=gesLines.map(t=>({texto:t}));
+  // Auto-conclude: todos os itens do liderado marcados → Concluído
+  const allChecked=lidArr.length>0 && lidArr.every(x=>x.concluido);
   const newStatus=allChecked?'Concluído':(existing?.status||'Pendente');
   const data={
     dataReuniao:document.getElementById('fData').value,loja,
     lider:document.getElementById('fLider').value.trim(),
     liderado:document.getElementById('fLiderado').value.trim(),
-    combinado:combArr,
-    responsavel:document.getElementById('fResp').value.trim(),
+    combinadosLiderado:lidArr,
+    combinadosGestor:gesArr,
     prazo:document.getElementById('fPrazo').value,
     obs:document.getElementById('fObs').value.trim(),
     status:newStatus,
@@ -843,12 +923,12 @@ window.saveItem=async function(){
 
 window.toggleItem=async function(id,idx){
   const it=items.find(x=>x.id===id);
-  if(!it||!it.combinado[idx])return;
+  if(!it||!it.combinadosLiderado||!it.combinadosLiderado[idx])return;
   // Atualização otimista (UI primeiro, sync depois)
-  it.combinado[idx].concluido=!it.combinado[idx].concluido;
+  it.combinadosLiderado[idx].concluido=!it.combinadosLiderado[idx].concluido;
   const {tot,ok}=combProgress(it);
   const data={
-    combinado:it.combinado,
+    combinadosLiderado:it.combinadosLiderado,
     atualizadoEm:new Date().toISOString(),
     atualizadoPor:currentUser.uid
   };
@@ -866,7 +946,7 @@ window.toggleItem=async function(id,idx){
   }catch(e){
     console.error(e);
     // Reverte em caso de erro
-    it.combinado[idx].concluido=!it.combinado[idx].concluido;
+    it.combinadosLiderado[idx].concluido=!it.combinadosLiderado[idx].concluido;
     if(data.status){it.status=data.status==='Concluído'?'Pendente':it.status;}
     render();
     if(drawerName)renderHistory(drawerName);
@@ -944,11 +1024,6 @@ function renderHistory(name){
     const cls=s==='Concluído'?(tot>0&&ok===tot?'done':'partial'):s==='Atrasado'?'late':s==='Vence hoje'?'partial':'pend';
     const pillCls=s==='Atrasado'?'p-late':s==='Vence hoje'?'p-today':s==='Pendente'?'p-pend':'p-done';
     const pillLabel=s==='Concluído'&&tot?`Concluído (${ok}/${tot})`:s;
-    const itemsHtml=(it.combinado||[]).map(x=>`
-      <div class="item-row${x.concluido?' done':''}">
-        <input type="checkbox" class="chk" ${x.concluido?'checked':''} disabled>
-        <span class="item-text">${esc(x.texto)}</span>
-      </div>`).join('');
     return `<div class="tl-entry ${cls}">
       <div class="tl-dot"></div>
       <div class="tl-card">
@@ -956,7 +1031,7 @@ function renderHistory(name){
           <span class="tl-date">${fmt(it.dataReuniao)}</span>
           <span class="pill ${pillCls}">${pillLabel}</span>
         </div>
-        <div class="items">${itemsHtml||'<div style="color:var(--text3);font-size:11px">Sem itens</div>'}</div>
+        ${fmtCombReadonly(it)}
         ${it.prazo?`<div class="tl-prazo" style="margin-top:8px;font-size:11px">Prazo: <strong>${fmt(it.prazo)}</strong></div>`:''}
       </div>
     </div>`;
@@ -986,19 +1061,22 @@ window.clearF=function(){
 let tt;
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';clearTimeout(tt);tt=setTimeout(()=>t.style.display='none',2500);}
 
-const fCombEl=document.getElementById('fComb');
-fCombEl.addEventListener('focus',()=>{
-  if(!fCombEl.value){fCombEl.value='• ';setTimeout(()=>fCombEl.setSelectionRange(2,2),0);}
-});
-fCombEl.addEventListener('keydown',(e)=>{
-  if(e.key==='Enter'&&!e.shiftKey){
-    e.preventDefault();
-    const s=fCombEl.selectionStart,en=fCombEl.selectionEnd;
-    const v=fCombEl.value;
-    fCombEl.value=v.substring(0,s)+'\n• '+v.substring(en);
-    const np=s+3;fCombEl.setSelectionRange(np,np);
-  }
-});
+function attachBulletBehavior(el){
+  el.addEventListener('focus',()=>{
+    if(!el.value){el.value='• ';setTimeout(()=>el.setSelectionRange(2,2),0);}
+  });
+  el.addEventListener('keydown',(e)=>{
+    if(e.key==='Enter'&&!e.shiftKey){
+      e.preventDefault();
+      const s=el.selectionStart,en=el.selectionEnd;
+      const v=el.value;
+      el.value=v.substring(0,s)+'\n• '+v.substring(en);
+      const np=s+3;el.setSelectionRange(np,np);
+    }
+  });
+}
+attachBulletBehavior(document.getElementById('fCombLid'));
+attachBulletBehavior(document.getElementById('fCombGes'));
 
 // ===== GESTÃO DE USUÁRIOS (admin) =====
 window.openUsersModal=function(){
