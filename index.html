@@ -286,12 +286,36 @@ tr.r-done td{opacity:.5}
   /* Botões de ação maiores p/ toque */
   .abtn{width:34px;height:34px;font-size:14px}
 
-  /* Modal: tela cheia confortável */
-  .modal{width:calc(100vw - 12px);max-height:94vh;padding:18px;border-radius:16px}
-  .mhead{font-size:15px;margin-bottom:16px;padding-bottom:12px}
+  /* Modal: tela cheia, footer fixo respeitando safe-area do iOS/Android */
+  .modal{
+    width:100vw;max-width:100vw;
+    height:100dvh;max-height:100dvh;
+    padding:0;border-radius:0;
+    display:flex;flex-direction:column;
+    overflow:hidden;
+  }
+  .modal > .mhead{
+    flex-shrink:0;margin:0;
+    padding:16px 18px 12px;
+    border-bottom:1px solid var(--border);
+    background:var(--surface);font-size:15px;
+  }
+  .modal > .mbody{
+    flex:1;min-height:0;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+    padding:16px 18px 80px;
+  }
+  .modal > .mfoot{
+    flex-shrink:0;margin:0;
+    padding:12px 18px calc(12px + env(safe-area-inset-bottom));
+    background:var(--surface);
+    border-top:1px solid var(--border);
+  }
   .mrow{grid-template-columns:1fr;gap:10px}
   /* Evita zoom automático do iOS Safari ao focar inputs (precisa ≥16px) */
-  .fg input,.fg textarea{font-size:16px}
+  .fg input,.fg textarea,.fg select{font-size:16px}
 }
 
   /* User pill compacto no mobile */
@@ -417,6 +441,7 @@ tr.r-done td{opacity:.5}
   <div class="overlay" id="overlay" style="display:none" onclick="outsideClose(event)">
     <div class="modal">
       <div class="mhead"><div class="mdot"></div><span id="mTitle">Novo combinado</span></div>
+      <div class="mbody">
       <div class="mrow">
         <div class="fg"><label>Data da reunião</label><input type="date" id="fData"></div>
         <div class="fg"><label>Loja / Setor</label>
@@ -444,6 +469,7 @@ tr.r-done td{opacity:.5}
         <div class="fg full"><label>Data-limite</label><input type="date" id="fPrazo"></div>
         <div class="fg full"><label>Observação (opcional)</label><input type="text" id="fObs" placeholder="Contexto adicional"></div>
       </div>
+      </div>
       <div class="mfoot">
         <button class="btn-reopen" id="btnReopen" onclick="reopenItem()" style="display:none">↻ Reabrir card</button>
         <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
@@ -455,8 +481,10 @@ tr.r-done td{opacity:.5}
   <div class="overlay" id="usersOverlay" style="display:none" onclick="outsideCloseUsers(event)">
     <div class="modal">
       <div class="mhead"><div class="mdot"></div><span>Usuários</span></div>
-      <div class="users-list" id="usersList"></div>
-      <button class="btn-add-user" onclick="openCreateUser()">+ Novo usuário</button>
+      <div class="mbody">
+        <div class="users-list" id="usersList"></div>
+        <button class="btn-add-user" onclick="openCreateUser()">+ Novo usuário</button>
+      </div>
       <div class="mfoot">
         <button class="btn-cancel" onclick="closeUsersModal()">Fechar</button>
       </div>
@@ -466,6 +494,7 @@ tr.r-done td{opacity:.5}
   <div class="overlay" id="cuOverlay" style="display:none" onclick="outsideCloseCu(event)">
     <div class="modal">
       <div class="mhead"><div class="mdot"></div><span id="cuTitle">Novo usuário</span></div>
+      <div class="mbody">
       <div class="mrow">
         <div class="fg full"><label>Nome completo</label><input type="text" id="cuNome" placeholder="ex.: João Silva"></div>
         <div class="fg" id="cuUserWrap"><label id="cuUserLabel">Usuário (login)</label><input type="text" id="cuUser" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="joao.silva"></div>
@@ -494,6 +523,7 @@ tr.r-done td{opacity:.5}
       <div id="cuHint" style="font-size:11px;color:var(--text3);margin-top:14px;line-height:1.5">
         💡 O usuário só consegue acessar com <strong>usuário + senha</strong>. Anote a senha e repasse com segurança — você (admin) é quem precisa avisar.
       </div>
+      </div>
       <div class="mfoot">
         <button class="btn-cancel" onclick="closeCreateUser()">Cancelar</button>
         <button class="btn-save" id="cuBtn" onclick="saveUser()">Criar</button>
@@ -515,12 +545,14 @@ tr.r-done td{opacity:.5}
   <div class="overlay" id="cpOverlay" style="display:none" onclick="outsideCloseCp(event)">
     <div class="modal" style="max-width:420px">
       <div class="mhead"><div class="mdot"></div><span id="cpTitle">Trocar minha senha</span></div>
-      <div id="cpHint" style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.5"></div>
-      <div class="login-err" id="cpErr"></div>
-      <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px">
-        <div class="fg" id="cpCurWrap"><label>Senha atual</label><input type="password" id="cpCur" autocomplete="current-password"></div>
-        <div class="fg"><label>Nova senha (mín. 6)</label><input type="password" id="cpNew" autocomplete="new-password"></div>
-        <div class="fg"><label>Confirme a nova senha</label><input type="password" id="cpNew2" autocomplete="new-password"></div>
+      <div class="mbody">
+        <div id="cpHint" style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.5"></div>
+        <div class="login-err" id="cpErr"></div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px">
+          <div class="fg" id="cpCurWrap"><label>Senha atual</label><input type="password" id="cpCur" autocomplete="current-password"></div>
+          <div class="fg"><label>Nova senha (mín. 6)</label><input type="password" id="cpNew" autocomplete="new-password"></div>
+          <div class="fg"><label>Confirme a nova senha</label><input type="password" id="cpNew2" autocomplete="new-password"></div>
+        </div>
       </div>
       <div class="mfoot">
         <button class="btn-cancel" id="cpCancelBtn" onclick="closeChangePassword()">Cancelar</button>
