@@ -107,6 +107,45 @@ tr.r-done td{opacity:.5}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 
+/* ===== LOGIN ===== */
+.login{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:150;padding:20px}
+.login-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:32px 28px;width:100%;max-width:380px;box-shadow:0 8px 32px rgba(0,0,0,.06)}
+.login-brand{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:24px}
+.login-logo{width:44px;height:44px;border-radius:14px;background:var(--red);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:18px;letter-spacing:-0.02em}
+.login-title{font-size:16px;font-weight:600;color:var(--text1)}
+.login-sub{font-size:11px;color:var(--text3)}
+.login form{display:flex;flex-direction:column;gap:12px}
+.login label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:5px}
+.login input{width:100%;border:1px solid var(--border);border-radius:var(--r-md);padding:10px 12px;font-family:var(--font);font-size:14px;color:var(--text1);background:var(--surface2);outline:none;transition:border .15s}
+.login input:focus{border-color:var(--red);background:var(--surface)}
+.login .btn-login{background:var(--red);color:#fff;border:none;border-radius:var(--r-md);padding:11px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;margin-top:6px}
+.login .btn-login:disabled{opacity:.6;cursor:not-allowed}
+.login-err{background:var(--red-soft);color:var(--red);font-size:12px;padding:9px 12px;border-radius:10px;display:none}
+.login-foot{font-size:10px;color:var(--text3);text-align:center;margin-top:20px}
+
+/* ===== USER PILL / TOPBAR ===== */
+.user-pill{display:flex;align-items:center;gap:8px;padding:5px 10px 5px 5px;border-radius:20px;background:var(--surface2);border:1px solid var(--border);cursor:default}
+.user-avatar{width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.user-info-text{display:flex;flex-direction:column;line-height:1.2}
+.user-info-text .un{font-size:11px;font-weight:600;color:var(--text1)}
+.user-info-text .um{font-size:9px;color:var(--text3)}
+.btn-icon{background:transparent;border:1px solid var(--border);border-radius:50%;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);font-size:13px;transition:all .15s}
+.btn-icon:hover{border-color:var(--red);color:var(--red)}
+
+/* ===== USER MANAGEMENT MODAL ===== */
+.users-list{display:flex;flex-direction:column;gap:6px;margin:8px 0 4px}
+.user-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--surface2)}
+.user-item .user-avatar{width:32px;height:32px;font-size:11px}
+.user-item-body{flex:1;min-width:0}
+.user-item-name{font-size:13px;font-weight:600;color:var(--text1)}
+.user-item-meta{font-size:11px;color:var(--text3);margin-top:1px}
+.role-badge{display:inline-block;padding:1px 7px;border-radius:10px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-right:6px;vertical-align:1px}
+.role-badge.admin{background:#FFF0F0;color:var(--red);border:1px solid var(--red-mid)}
+.role-badge.gerente{background:var(--blue-soft);color:#005CC8;border:1px solid #C8DDFF}
+.btn-add-user{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:10px;border:1px dashed var(--border);border-radius:var(--r-md);background:transparent;color:var(--text2);font-family:var(--font);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;margin-top:4px}
+.btn-add-user:hover{border-color:var(--red);color:var(--red);border-style:solid}
+.fg input[readonly]{background:#EFEFF1;color:var(--text2);cursor:not-allowed}
+
 /* ===== MOBILE (≤768px) ===== */
 @media (max-width:768px){
   html,body{font-size:14px}
@@ -186,12 +225,21 @@ tr.r-done td{opacity:.5}
   .fg input,.fg textarea{font-size:16px}
 }
 
+  /* User pill compacto no mobile */
+  .user-pill .user-info-text{display:none}
+  .user-pill{padding:3px;border-radius:50%}
+  .login-card{padding:24px 20px}
+  .login input{font-size:16px}
+}
+
 /* ===== MOBILE PEQUENO (≤380px) ===== */
 @media (max-width:380px){
   .brand-tag{display:none}
   .btn-new{padding:6px 11px;font-size:11px}
   .metric{min-width:100px;padding:9px 11px}
   .mnum{font-size:17px}
+  .topbar{gap:6px}
+  .btn-new{padding:6px 10px}
 }
 </style>
 </head>
@@ -200,6 +248,29 @@ tr.r-done td{opacity:.5}
 <div class="loading-screen" id="ls">
   <div class="spinner"></div>
   <div style="font-size:13px;color:#AEAEB2">Conectando à nuvem...</div>
+</div>
+
+<div class="login" id="login" style="display:none">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-logo">OD</div>
+      <div class="login-title">Óticas Diniz</div>
+      <div class="login-sub">Controle de Combinados 1:1</div>
+    </div>
+    <div class="login-err" id="lErr"></div>
+    <form onsubmit="doLogin(event)">
+      <div>
+        <label for="lUser">Usuário</label>
+        <input type="text" id="lUser" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="ex.: joao.silva">
+      </div>
+      <div>
+        <label for="lPass">Senha</label>
+        <input type="password" id="lPass" autocomplete="current-password" placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn-login" id="lBtn">Entrar</button>
+    </form>
+    <div class="login-foot">Acesso restrito · Diniz</div>
+  </div>
 </div>
 
 <div class="app" id="app" style="display:none">
@@ -211,6 +282,15 @@ tr.r-done td{opacity:.5}
     <div class="topbar-right">
       <div class="sync"><div class="sdot" id="sdot"></div><span id="stxt">Sincronizado</span></div>
       <button class="btn-new" onclick="openModal()">+ Novo combinado</button>
+      <button class="btn-icon admin-only" id="btnUsers" onclick="openUsersModal()" title="Gerenciar usuários" style="display:none">👥</button>
+      <div class="user-pill" title="" id="userPill">
+        <div class="user-avatar" id="uAvatar">·</div>
+        <div class="user-info-text">
+          <span class="un" id="uName">—</span>
+          <span class="um" id="uMeta">—</span>
+        </div>
+      </div>
+      <button class="btn-icon" onclick="doLogout()" title="Sair">⏻</button>
     </div>
   </div>
 
@@ -218,7 +298,7 @@ tr.r-done td{opacity:.5}
 
   <div class="filters">
     <span class="ftag">Filtrar por</span>
-    <select class="fsel" id="filtLoja" onchange="renderTable()">
+    <select class="fsel admin-only" id="filtLoja" onchange="renderTable()" style="display:none">
       <option value="">Todas as unidades</option>
       <optgroup label="Lojas">
         <option>Grande Circular Shopping</option>
@@ -287,12 +367,58 @@ tr.r-done td{opacity:.5}
     </div>
   </div>
 
+  <div class="overlay" id="usersOverlay" style="display:none" onclick="outsideCloseUsers(event)">
+    <div class="modal">
+      <div class="mhead"><div class="mdot"></div><span>Usuários</span></div>
+      <div class="users-list" id="usersList"></div>
+      <button class="btn-add-user" onclick="openCreateUser()">+ Novo usuário</button>
+      <div class="mfoot">
+        <button class="btn-cancel" onclick="closeUsersModal()">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="cuOverlay" style="display:none" onclick="outsideCloseCu(event)">
+    <div class="modal">
+      <div class="mhead"><div class="mdot"></div><span id="cuTitle">Novo usuário</span></div>
+      <div class="mrow">
+        <div class="fg full"><label>Nome completo</label><input type="text" id="cuNome" placeholder="ex.: João Silva"></div>
+        <div class="fg" id="cuUserWrap"><label id="cuUserLabel">Usuário (login)</label><input type="text" id="cuUser" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="joao.silva"></div>
+        <div class="fg" id="cuPassWrap"><label>Senha (mín. 6)</label><input type="text" id="cuPass" autocomplete="new-password" placeholder="••••••••"></div>
+        <div class="fg" id="cuRoleWrap"><label>Perfil</label>
+          <select id="cuRole" onchange="toggleLojaField()">
+            <option value="gerente">Gerente</option>
+            <option value="admin">Administrador</option>
+          </select>
+        </div>
+        <div class="fg" id="cuLojaWrap"><label>Loja / Setor</label>
+          <select id="cuLoja">
+            <option value="">Selecione...</option>
+            <optgroup label="Lojas">
+              <option>Grande Circular Shopping</option><option>Sumaúma Shopping</option>
+              <option>Amazonas Shopping</option><option>Manauara Shopping</option><option>Manacapuru</option>
+            </optgroup>
+            <optgroup label="Setores"><option>Administrativo</option></optgroup>
+          </select>
+        </div>
+      </div>
+      <div id="cuHint" style="font-size:11px;color:var(--text3);margin-top:14px;line-height:1.5">
+        💡 O usuário só consegue acessar com <strong>usuário + senha</strong>. Anote a senha e repasse com segurança — você (admin) é quem precisa avisar.
+      </div>
+      <div class="mfoot">
+        <button class="btn-cancel" onclick="closeCreateUser()">Cancelar</button>
+        <button class="btn-save" id="cuBtn" onclick="saveUser()">Criar</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast" style="display:none"></div>
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, getDoc, setDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC71cdhIPQMcXMoX6iyvtQqdAZMhcXL3r0",
@@ -303,9 +429,15 @@ const firebaseConfig = {
   appId: "1:296519476846:web:6b564ebb854cfed711287f"
 };
 
-const db = getFirestore(initializeApp(firebaseConfig));
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 const COL = "combinados";
-let items = [], editId = null;
+const USERS_COL = "users";
+const EMAIL_DOMAIN = "@diniz.local";
+let items = [], users = [], editId = null, editUserId = null;
+let currentUser = null;
+let unsubItems = null, unsubUsers = null;
 
 const td = () => new Date().toISOString().slice(0,10);
 function fmt(d){if(!d)return'—';const[y,m,dd]=d.split('-');return`${dd}/${m}/${y}`;}
@@ -385,20 +517,124 @@ function renderTable(){
   }).join('');
 }
 
-// Listener em tempo real
-onSnapshot(query(collection(db,COL)),(snap)=>{
-  items=snap.docs.map(d=>({id:d.id,...d.data()}));
-  render();
+// ===== AUTH =====
+onAuthStateChanged(auth, async (user)=>{
+  if(user){
+    try{
+      const profSnap=await getDoc(doc(db,USERS_COL,user.uid));
+      if(!profSnap.exists()){
+        await signOut(auth);
+        showLogin('Sua conta não tem perfil cadastrado. Contate o admin.');
+        return;
+      }
+      currentUser={uid:user.uid,...profSnap.data()};
+      showApp();
+      setupListeners();
+    }catch(e){ console.error(e); showLogin('Erro ao carregar perfil.'); }
+  }else{
+    currentUser=null;
+    teardownListeners();
+    items=[]; users=[];
+    showLogin();
+  }
+});
+
+window.doLogin=async function(e){
+  if(e)e.preventDefault();
+  const u=document.getElementById('lUser').value.trim().toLowerCase();
+  const p=document.getElementById('lPass').value;
+  if(!u||!p){showLoginErr('Preencha usuário e senha.');return;}
+  document.getElementById('lBtn').disabled=true;
+  document.getElementById('lBtn').textContent='Entrando...';
+  try{
+    await signInWithEmailAndPassword(auth,u+EMAIL_DOMAIN,p);
+  }catch(err){
+    const c=err.code||'';
+    const msg=(c.includes('invalid-credential')||c.includes('wrong-password')||c.includes('user-not-found'))
+      ? 'Usuário ou senha incorretos.'
+      : c.includes('too-many-requests') ? 'Muitas tentativas. Tente novamente em alguns minutos.'
+      : 'Não foi possível entrar. Verifique sua conexão.';
+    showLoginErr(msg);
+  }finally{
+    document.getElementById('lBtn').disabled=false;
+    document.getElementById('lBtn').textContent='Entrar';
+  }
+};
+
+window.doLogout=async function(){
+  if(!confirm('Sair do sistema?'))return;
+  await signOut(auth);
+};
+
+function showLogin(msg){
   document.getElementById('ls').style.display='none';
+  document.getElementById('app').style.display='none';
+  document.getElementById('login').style.display='flex';
+  document.getElementById('lUser').value='';
+  document.getElementById('lPass').value='';
+  if(msg)showLoginErr(msg);
+  setTimeout(()=>document.getElementById('lUser').focus(),50);
+}
+function showLoginErr(msg){
+  const e=document.getElementById('lErr');
+  e.textContent=msg; e.style.display='block';
+}
+function showApp(){
+  document.getElementById('ls').style.display='none';
+  document.getElementById('login').style.display='none';
   document.getElementById('app').style.display='flex';
-  setSync('ok');
-},(e)=>{ console.error(e); setSync('error'); });
+  const initials=currentUser.nome.split(/\s+/).map(n=>n[0]).slice(0,2).join('').toUpperCase();
+  document.getElementById('uAvatar').textContent=initials;
+  document.getElementById('uName').textContent=currentUser.nome;
+  document.getElementById('uMeta').textContent=currentUser.role==='admin'?'Administrador':(currentUser.loja||'Gerente');
+  document.getElementById('userPill').title=`${currentUser.nome} · @${currentUser.username}`;
+  const isAdmin=currentUser.role==='admin';
+  document.querySelectorAll('.admin-only').forEach(el=>{
+    if(el.id==='filtLoja'){ el.style.display=isAdmin?'':'none'; return; }
+    el.style.display=isAdmin?'':'none';
+  });
+}
+
+// ===== REALTIME =====
+function setupListeners(){
+  unsubItems=onSnapshot(query(collection(db,COL)),(snap)=>{
+    let arr=snap.docs.map(d=>({id:d.id,...d.data()}));
+    if(currentUser.role==='gerente'){
+      arr=arr.filter(i=>i.loja===currentUser.loja && i.criadoPor);
+    }
+    items=arr;
+    render();
+    setSync('ok');
+  },(e)=>{ console.error(e); setSync('error'); });
+
+  if(currentUser.role==='admin'){
+    unsubUsers=onSnapshot(query(collection(db,USERS_COL)),(snap)=>{
+      users=snap.docs.map(d=>({id:d.id,...d.data()}));
+      renderUsers();
+    },(e)=>console.error(e));
+  }
+}
+function teardownListeners(){
+  if(unsubItems){unsubItems();unsubItems=null;}
+  if(unsubUsers){unsubUsers();unsubUsers=null;}
+}
 
 window.openModal=function(id=null){
   editId=id;const it=id?items.find(i=>i.id===id):null;
   document.getElementById('mTitle').textContent=id?'Editar combinado':'Novo combinado';
   document.getElementById('fData').value=it?.dataReuniao||td();
-  document.getElementById('fLoja').value=it?.loja||'';
+  const fLoja=document.getElementById('fLoja');
+  if(currentUser.role==='gerente'){
+    fLoja.value=currentUser.loja||'';
+    fLoja.disabled=true;
+    fLoja.style.background='#EFEFF1';
+    fLoja.style.cursor='not-allowed';
+  }else{
+    fLoja.value=it?.loja||'';
+    fLoja.disabled=false;
+    fLoja.style.background='';
+    fLoja.style.cursor='';
+  }
   document.getElementById('fLider').value=it?.lider||'';
   document.getElementById('fLiderado').value=it?.liderado||'';
   document.getElementById('fComb').value=it?.combinado||'';
@@ -413,10 +649,11 @@ window.outsideClose=function(e){if(e.target.id==='overlay')closeModal();};
 window.saveItem=async function(){
   const rawComb=document.getElementById('fComb').value;
   const comb=rawComb.split('\n').map(l=>l.trimEnd()).filter(l=>l.replace(/^[•\-\*]\s*/,'').trim()!=='').join('\n').trim();
-  const loja=document.getElementById('fLoja').value;
+  const loja=currentUser.role==='gerente'?currentUser.loja:document.getElementById('fLoja').value;
   if(!comb){toast('Preencha o campo Combinado.');return;}
   if(!loja){toast('Selecione a loja.');return;}
   document.getElementById('btnSave').disabled=true;setSync('load');
+  const existing=editId?items.find(i=>i.id===editId):null;
   const data={
     dataReuniao:document.getElementById('fData').value,loja,
     lider:document.getElementById('fLider').value.trim(),
@@ -424,8 +661,12 @@ window.saveItem=async function(){
     combinado:comb,responsavel:document.getElementById('fResp').value.trim(),
     prazo:document.getElementById('fPrazo').value,
     obs:document.getElementById('fObs').value.trim(),
-    status:editId?(items.find(i=>i.id===editId)?.status||'Pendente'):'Pendente',
-    criadoEm:editId?(items.find(i=>i.id===editId)?.criadoEm||new Date().toISOString()):new Date().toISOString()
+    status:existing?.status||'Pendente',
+    criadoEm:existing?.criadoEm||new Date().toISOString(),
+    criadoPor:existing?.criadoPor||currentUser.uid,
+    criadoPorNome:existing?.criadoPorNome||currentUser.nome,
+    atualizadoEm:new Date().toISOString(),
+    atualizadoPor:currentUser.uid
   };
   try{
     if(editId){await updateDoc(doc(db,COL,editId),data);toast('Atualizado!');}
@@ -471,6 +712,180 @@ fCombEl.addEventListener('keydown',(e)=>{
     const np=s+3;fCombEl.setSelectionRange(np,np);
   }
 });
+
+// ===== GESTÃO DE USUÁRIOS (admin) =====
+window.openUsersModal=function(){
+  if(currentUser?.role!=='admin')return;
+  document.getElementById('usersOverlay').style.display='flex';
+  renderUsers();
+};
+window.closeUsersModal=function(){document.getElementById('usersOverlay').style.display='none';};
+window.outsideCloseUsers=function(e){if(e.target.id==='usersOverlay')closeUsersModal();};
+
+window.openCreateUser=function(){openUserModal(null);};
+window.openEditUser=function(uid){openUserModal(uid);};
+window.closeCreateUser=function(){document.getElementById('cuOverlay').style.display='none';editUserId=null;};
+window.outsideCloseCu=function(e){if(e.target.id==='cuOverlay')closeCreateUser();};
+window.toggleLojaField=function(){
+  const r=document.getElementById('cuRole').value;
+  document.getElementById('cuLojaWrap').style.display=r==='gerente'?'flex':'none';
+};
+
+function openUserModal(uid){
+  editUserId=uid;
+  const u=uid?users.find(x=>x.id===uid||x.uid===uid):null;
+  const isEdit=!!u;
+  const isSelf=isEdit && u.uid===currentUser.uid;
+
+  document.getElementById('cuTitle').textContent=isEdit?'Editar usuário':'Novo usuário';
+  document.getElementById('cuBtn').textContent=isEdit?'Salvar':'Criar';
+
+  document.getElementById('cuNome').value=u?.nome||'';
+  document.getElementById('cuUser').value=u?.username||'';
+  document.getElementById('cuPass').value='';
+  document.getElementById('cuRole').value=u?.role||'gerente';
+  document.getElementById('cuLoja').value=u?.loja||'';
+
+  // Username travado em edição (porque é o login real do Firebase Auth)
+  const userInput=document.getElementById('cuUser');
+  const userLabel=document.getElementById('cuUserLabel');
+  if(isEdit){
+    userInput.setAttribute('readonly','');
+    userInput.title='Para alterar o login, remova e recrie o usuário.';
+    userLabel.innerHTML='Usuário (login) <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">— não editável</span>';
+  }else{
+    userInput.removeAttribute('readonly');
+    userInput.title='';
+    userLabel.textContent='Usuário (login)';
+  }
+
+  // Senha só na criação
+  document.getElementById('cuPassWrap').style.display=isEdit?'none':'flex';
+
+  // Role: bloqueado em self-edit (admin não pode rebaixar a si mesmo)
+  const roleSel=document.getElementById('cuRole');
+  if(isSelf){roleSel.setAttribute('disabled','');roleSel.title='Você não pode alterar o próprio perfil.';}
+  else{roleSel.removeAttribute('disabled');roleSel.title='';}
+
+  // Mensagem de rodapé
+  document.getElementById('cuHint').innerHTML=isEdit
+    ? (isSelf
+        ? '✏️ Editando seu próprio perfil. Você pode alterar apenas o nome — perfil e login estão travados.'
+        : '✏️ Edite os dados do usuário. Login e senha não podem ser alterados aqui.')
+    : '💡 O usuário só consegue acessar com <strong>usuário + senha</strong>. Anote a senha e repasse com segurança — você (admin) é quem precisa avisar.';
+
+  toggleLojaField();
+  document.getElementById('cuOverlay').style.display='flex';
+}
+
+function renderUsers(){
+  const el=document.getElementById('usersList');
+  if(!el)return;
+  if(!users.length){el.innerHTML='<div style="text-align:center;padding:24px;color:var(--text3);font-size:12px">Nenhum usuário cadastrado.</div>';return;}
+  const sorted=[...users].sort((a,b)=>{
+    if(a.role!==b.role)return a.role==='admin'?-1:1;
+    return (a.nome||'').localeCompare(b.nome||'');
+  });
+  el.innerHTML=sorted.map(u=>{
+    const ini=(u.nome||'?').split(/\s+/).map(n=>n[0]).slice(0,2).join('').toUpperCase();
+    const isMe=u.uid===currentUser.uid;
+    return `<div class="user-item">
+      <div class="user-avatar">${ini}</div>
+      <div class="user-item-body">
+        <div class="user-item-name">
+          <span class="role-badge ${u.role}">${u.role==='admin'?'Admin':'Gerente'}</span>
+          ${u.nome||'—'}${isMe?' <span style="color:var(--text3);font-size:10px;font-weight:400">· você</span>':''}
+        </div>
+        <div class="user-item-meta">@${u.username||'—'} · ${u.role==='admin'?'Acesso total':(u.loja||'sem loja')}</div>
+      </div>
+      <button class="abtn" onclick="openEditUser('${u.id}')" title="Editar usuário">✏</button>
+      ${isMe?'':`<button class="abtn" onclick="_delUser('${u.id}','${(u.nome||'').replace(/'/g,"\\'")}')" title="Remover usuário">🗑</button>`}
+    </div>`;
+  }).join('');
+}
+
+window.saveUser=async function(){
+  const isEdit=!!editUserId;
+  const existing=isEdit?users.find(x=>x.id===editUserId||x.uid===editUserId):null;
+  if(isEdit && !existing){toast('Usuário não encontrado.');return;}
+  const isSelf=isEdit && existing.uid===currentUser.uid;
+
+  const nome=document.getElementById('cuNome').value.trim();
+  const username=isEdit
+    ? existing.username
+    : document.getElementById('cuUser').value.trim().toLowerCase().replace(/[^a-z0-9._-]/g,'');
+  const senha=document.getElementById('cuPass').value;
+  const role=isSelf?existing.role:document.getElementById('cuRole').value;
+  const loja=document.getElementById('cuLoja').value;
+
+  if(!nome){toast('Informe o nome completo.');return;}
+  if(!isEdit){
+    if(!username||username.length<3){toast('Usuário deve ter ao menos 3 caracteres (letras, números, . _ -).');return;}
+    if(senha.length<6){toast('Senha deve ter ao menos 6 caracteres.');return;}
+  }
+  if(role==='gerente'&&!loja){toast('Selecione a loja do gerente.');return;}
+
+  document.getElementById('cuBtn').disabled=true;
+  document.getElementById('cuBtn').textContent=isEdit?'Salvando...':'Criando...';
+
+  if(isEdit){
+    try{
+      await updateDoc(doc(db,USERS_COL,existing.id),{
+        nome,role,
+        loja:role==='gerente'?loja:null,
+        atualizadoEm:new Date().toISOString(),
+        atualizadoPor:currentUser.uid
+      });
+      toast('Usuário atualizado!');
+      closeCreateUser();
+    }catch(e){
+      console.error(e);
+      toast('Erro ao atualizar usuário.');
+    }finally{
+      document.getElementById('cuBtn').disabled=false;
+      document.getElementById('cuBtn').textContent='Salvar';
+    }
+    return;
+  }
+
+  // Criação
+  let secApp=null;
+  try{
+    secApp=initializeApp(firebaseConfig,'sec-'+Date.now());
+    const secAuth=getAuth(secApp);
+    const cred=await createUserWithEmailAndPassword(secAuth,username+EMAIL_DOMAIN,senha);
+    const uid=cred.user.uid;
+    await setDoc(doc(db,USERS_COL,uid),{
+      uid,username,nome,role,
+      loja:role==='gerente'?loja:null,
+      criadoEm:new Date().toISOString(),
+      criadoPor:currentUser.uid
+    });
+    await signOut(secAuth);
+    toast('Usuário criado com sucesso!');
+    closeCreateUser();
+  }catch(e){
+    console.error(e);
+    const c=e.code||'';
+    if(c.includes('email-already-in-use'))toast('Esse nome de usuário já existe.');
+    else if(c.includes('weak-password'))toast('Senha muito fraca (mín. 6 caracteres).');
+    else if(c.includes('invalid-email'))toast('Nome de usuário inválido.');
+    else toast('Erro ao criar usuário.');
+  }finally{
+    if(secApp){try{await deleteApp(secApp);}catch(_){}}
+    document.getElementById('cuBtn').disabled=false;
+    document.getElementById('cuBtn').textContent='Criar';
+  }
+};
+
+window._delUser=async function(uid,nome){
+  if(uid===currentUser.uid){toast('Você não pode remover sua própria conta.');return;}
+  if(!confirm(`Remover "${nome}"?\n\nO usuário perderá acesso imediatamente. (A conta de login fica órfã no Firebase Auth — para apagá-la totalmente, use o Firebase Console.)`))return;
+  try{
+    await deleteDoc(doc(db,USERS_COL,uid));
+    toast('Usuário removido.');
+  }catch(e){console.error(e);toast('Erro ao remover.');}
+};
 </script>
 </body>
 </html>
