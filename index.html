@@ -214,6 +214,7 @@ tr.r-done td{opacity:.5}
 .role-badge{display:inline-block;padding:1px 7px;border-radius:10px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-right:6px;vertical-align:1px}
 .role-badge.admin{background:#FFF0F0;color:var(--red);border:1px solid var(--red-mid)}
 .role-badge.gerente{background:var(--blue-soft);color:#005CC8;border:1px solid #C8DDFF}
+.role-badge.vr{background:var(--green-soft);color:#1A8A3C;border:1px solid #B6E8C2}
 .btn-add-user{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:10px;border:1px dashed var(--border);border-radius:var(--r-md);background:transparent;color:var(--text2);font-family:var(--font);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;margin-top:4px}
 .btn-add-user:hover{border-color:var(--red);color:var(--red);border-style:solid}
 .fg input[readonly]{background:#EFEFF1;color:var(--text2);cursor:not-allowed}
@@ -502,6 +503,7 @@ tr.r-done td{opacity:.5}
         <div class="fg" id="cuRoleWrap"><label>Perfil</label>
           <select id="cuRole" onchange="toggleLojaField()">
             <option value="gerente">Gerente</option>
+            <option value="vr">Vendedor Responsável</option>
             <option value="admin">Administrador</option>
           </select>
         </div>
@@ -600,6 +602,10 @@ function fmt(d){if(!d)return'—';const[y,m,dd]=d.split('-');return`${dd}/${m}/$
 function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 // Empacota string segura para usar dentro de onclick="fn(...)" (lida com aspas/apóstrofos)
 function jsAttr(s){return JSON.stringify(String(s||'')).replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+
+// Roles: 'admin' (acesso total), 'gerente' e 'vr' (vinculados a uma loja, mesmo escopo)
+function isLojaRole(r){return r==='gerente'||r==='vr';}
+function roleLabel(r){return r==='admin'?'Admin':r==='vr'?'Vendedor Resp.':'Gerente';}
 
 // Migração: aceita string (formato antigo) ou array (formato novo)
 function normalizeArr(v,withCheck){
@@ -859,7 +865,7 @@ function showApp(){
 function setupListeners(){
   unsubItems=onSnapshot(query(collection(db,COL)),(snap)=>{
     let arr=snap.docs.map(d=>normalizeItem({id:d.id,...d.data()}));
-    if(currentUser.role==='gerente'){
+    if(isLojaRole(currentUser.role)){
       arr=arr.filter(i=>i.loja===currentUser.loja && i.criadoPor);
     }
     items=arr;
@@ -885,7 +891,7 @@ window.openModal=function(id=null){
   document.getElementById('mTitle').textContent=id?'Editar combinado':'Novo combinado';
   document.getElementById('fData').value=it?.dataReuniao||td();
   const fLoja=document.getElementById('fLoja');
-  if(currentUser.role==='gerente'){
+  if(isLojaRole(currentUser.role)){
     fLoja.value=currentUser.loja||'';
     fLoja.disabled=true;
     fLoja.style.background='#EFEFF1';
@@ -915,7 +921,7 @@ window.outsideClose=function(e){if(e.target.id==='overlay')closeModal();};
 window.saveItem=async function(){
   const lidLines=document.getElementById('fCombLid').value.split('\n').map(l=>l.replace(/^[•\-\*]\s*/,'').trim()).filter(l=>l);
   const gesLines=document.getElementById('fCombGes').value.split('\n').map(l=>l.replace(/^[•\-\*]\s*/,'').trim()).filter(l=>l);
-  const loja=currentUser.role==='gerente'?currentUser.loja:document.getElementById('fLoja').value;
+  const loja=isLojaRole(currentUser.role)?currentUser.loja:document.getElementById('fLoja').value;
   if(!lidLines.length){toast('Adicione ao menos um combinado do liderado.');return;}
   if(!loja){toast('Selecione a loja.');return;}
   document.getElementById('btnSave').disabled=true;setSync('load');
@@ -1125,7 +1131,7 @@ window.closeCreateUser=function(){document.getElementById('cuOverlay').style.dis
 window.outsideCloseCu=function(e){if(e.target.id==='cuOverlay')closeCreateUser();};
 window.toggleLojaField=function(){
   const r=document.getElementById('cuRole').value;
-  document.getElementById('cuLojaWrap').style.display=r==='gerente'?'flex':'none';
+  document.getElementById('cuLojaWrap').style.display=isLojaRole(r)?'flex':'none';
 };
 
 function openUserModal(uid){
@@ -1138,7 +1144,7 @@ function openUserModal(uid){
   }
   const isEdit=!!u;
   const isSelf=isEdit && u.uid===currentUser.uid;
-  const isGerenteSelf=isSelf && currentUser.role==='gerente';
+  const isGerenteSelf=isSelf && isLojaRole(currentUser.role);
 
   document.getElementById('cuTitle').textContent=isSelf?'Minha conta':(isEdit?'Editar usuário':'Novo usuário');
   document.getElementById('cuBtn').textContent=isEdit?'Salvar':'Criar';
@@ -1201,7 +1207,7 @@ function openUserModal(uid){
     : '💡 O usuário só consegue acessar com <strong>usuário + senha</strong>. Anote a senha e repasse com segurança — você (admin) é quem precisa avisar.';
 
   toggleLojaField();
-  // Para gerente self-edit, força mostrar o campo loja (mesmo "disabled") porque toggleLojaField esconde se role!=='gerente'
+  // Para self-edit de gerente/vr, força mostrar o campo loja (read-only) porque toggleLojaField só mostra para o role atual selecionado
   if(isGerenteSelf)document.getElementById('cuLojaWrap').style.display='flex';
   document.getElementById('cuOverlay').style.display='flex';
 }
@@ -1215,8 +1221,10 @@ function renderUsers(){
   const el=document.getElementById('usersList');
   if(!el)return;
   if(!users.length){el.innerHTML='<div style="text-align:center;padding:24px;color:var(--text3);font-size:12px">Nenhum usuário cadastrado.</div>';return;}
+  const rolePri=r=>r==='admin'?0:r==='gerente'?1:2;
   const sorted=[...users].sort((a,b)=>{
-    if(a.role!==b.role)return a.role==='admin'?-1:1;
+    const pa=rolePri(a.role),pb=rolePri(b.role);
+    if(pa!==pb)return pa-pb;
     return (a.nome||'').localeCompare(b.nome||'');
   });
   el.innerHTML=sorted.map(u=>{
@@ -1226,7 +1234,7 @@ function renderUsers(){
       <div class="user-avatar">${ini}</div>
       <div class="user-item-body">
         <div class="user-item-name">
-          <span class="role-badge ${u.role}">${u.role==='admin'?'Admin':'Gerente'}</span>
+          <span class="role-badge ${u.role}">${roleLabel(u.role)}</span>
           ${u.nome||'—'}${isMe?' <span style="color:var(--text3);font-size:10px;font-weight:400">· você</span>':''}
         </div>
         <div class="user-item-meta">@${u.username||'—'} · ${u.role==='admin'?'Acesso total':(u.loja||'sem loja')}</div>
@@ -1256,7 +1264,7 @@ window.saveUser=async function(){
     if(!username||username.length<3){toast('Usuário deve ter ao menos 3 caracteres (letras, números, . _ -).');return;}
     if(senha.length<6){toast('Senha deve ter ao menos 6 caracteres.');return;}
   }
-  if(role==='gerente'&&!loja){toast('Selecione a loja do gerente.');return;}
+  if(isLojaRole(role)&&!loja){toast('Selecione a loja.');return;}
 
   document.getElementById('cuBtn').disabled=true;
   document.getElementById('cuBtn').textContent=isEdit?'Salvando...':'Criando...';
@@ -1265,7 +1273,7 @@ window.saveUser=async function(){
     try{
       await updateDoc(doc(db,USERS_COL,existing.id),{
         nome,role,
-        loja:role==='gerente'?loja:null,
+        loja:isLojaRole(role)?loja:null,
         atualizadoEm:new Date().toISOString(),
         atualizadoPor:currentUser.uid
       });
@@ -1290,7 +1298,7 @@ window.saveUser=async function(){
     const uid=cred.user.uid;
     await setDoc(doc(db,USERS_COL,uid),{
       uid,username,nome,role,
-      loja:role==='gerente'?loja:null,
+      loja:isLojaRole(role)?loja:null,
       criadoEm:new Date().toISOString(),
       criadoPor:currentUser.uid,
       senhaInicial:true
