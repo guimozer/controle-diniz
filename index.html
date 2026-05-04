@@ -351,6 +351,16 @@ tr.r-done td{opacity:.5}
 .fin-module .fin-cal-btn:hover:not(:disabled){background:var(--fin-card2);border-color:var(--fin-accent);color:var(--fin-accent)}
 .fin-module .fin-cal-btn:disabled{opacity:.3;cursor:not-allowed}
 .fin-module .fin-cal-info{font-size:11px;color:var(--fin-muted);margin-bottom:10px;padding:6px 10px;background:var(--fin-card2);border-radius:6px;display:inline-block}
+/* Seletor de período do calendário (independente do filtro global) */
+.fin-module .fin-cal-period-bar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:10px 12px;background:#f8fafc;border:1px solid var(--fin-border);border-radius:8px;margin-bottom:12px}
+.fin-module .fin-cal-mode-toggle{display:inline-flex;background:#fff;border:1px solid var(--fin-border);border-radius:8px;overflow:hidden}
+.fin-module .fin-cal-mode-btn{background:none;border:none;padding:6px 14px;font-size:12px;font-weight:600;color:var(--fin-muted);cursor:pointer;font-family:var(--font);transition:all .15s}
+.fin-module .fin-cal-mode-btn:hover{color:var(--fin-accent)}
+.fin-module .fin-cal-mode-btn.active{background:var(--fin-accent);color:#fff}
+.fin-module .fin-cal-mode-month,.fin-module .fin-cal-mode-range{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:12px}
+.fin-module .fin-cal-mode-month select,.fin-module .fin-cal-mode-range input[type=date]{padding:5px 8px;border:1px solid var(--fin-border);border-radius:6px;font-size:12px;font-family:var(--font);background:#fff}
+.fin-module .fin-cal-mode-month select{min-width:160px}
+.fin-module .fin-cal-mode-range label{display:flex;gap:4px;align-items:center;color:var(--fin-muted)}
 .fin-module .fin-cal-info strong{color:var(--fin-text)}
 .fin-module .fin-cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;font-size:9px;font-weight:700;color:var(--fin-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;padding:0 2px}
 .fin-module .fin-cal-weekdays span{text-align:center}
@@ -974,12 +984,27 @@ tr.r-done td{opacity:.5}
           <div class="fin-section">
             <div class="fin-section-header">
               <div class="fin-section-title">Calendário de Vencimentos <span class="periodo-filtro-tag" id="fin-cal-month-label">—</span></div>
-              <div class="fin-cal-nav">
-                <button class="fin-cal-btn" id="fin-cal-prev" type="button" title="Mês anterior">‹</button>
-                <button class="fin-cal-btn" id="fin-cal-next" type="button" title="Próximo mês">›</button>
-              </div>
+              <div style="font-size:11px;color:var(--fin-muted)">Filtro independente do dashboard</div>
             </div>
             <div class="fin-section-body">
+              <!-- Seletor de período (independente do filtro global) -->
+              <div class="fin-cal-period-bar" id="fin-cal-period-bar">
+                <div class="fin-cal-mode-toggle">
+                  <button type="button" class="fin-cal-mode-btn active" data-mode="month">Por mês</button>
+                  <button type="button" class="fin-cal-mode-btn" data-mode="range">Período livre</button>
+                </div>
+                <div class="fin-cal-mode-month">
+                  <button class="fin-cal-btn" id="fin-cal-prev-mes" type="button" title="Mês anterior">‹</button>
+                  <select id="fin-cal-select-mes"></select>
+                  <button class="fin-cal-btn" id="fin-cal-next-mes" type="button" title="Próximo mês">›</button>
+                </div>
+                <div class="fin-cal-mode-range" style="display:none">
+                  <label>De: <input type="date" id="fin-cal-range-de"></label>
+                  <label>Até: <input type="date" id="fin-cal-range-ate"></label>
+                  <button class="fin-cal-btn" id="fin-cal-range-aplicar" type="button">Aplicar</button>
+                  <button class="fin-cal-btn" id="fin-cal-range-limpar" type="button">Limpar</button>
+                </div>
+              </div>
               <div class="fin-cal-info" id="fin-cal-info">Aguardando importação de dados</div>
               <div class="fin-cal-weekdays">
                 <span>SEG</span><span>TER</span><span>QUA</span><span>QUI</span><span>SEX</span><span>SÁB</span><span>DOM</span>
@@ -3164,13 +3189,50 @@ function expandBusca(busca){
   function brl(v){return 'R$ '+(+v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
   function fmtBr(s){if(!s)return '—';const[y,m,d]=s.split('-');return `${d}/${m}/${y}`;}
 
+  // ---- Utilitários de data (timezone-safe) ----
+  // Constrói Date local a partir de string YYYY-MM-DD (evita interpretação UTC).
+  function parseYmdLocal(ymd){
+    if(!ymd||typeof ymd!=='string')return null;
+    const p=ymd.split('-'); if(p.length<2)return null;
+    const y=+p[0], m=+p[1], d=+(p[2]||1);
+    if(!y||!m)return null;
+    return new Date(y, m-1, d);
+  }
+  // Aceita serial Excel (number), Date, ou string DD/MM/YYYY ou MM/DD/YYYY (heurística).
+  // Retorna Date local OU null. Usado quando precisamos de objeto Date no calendário/resumo.
+  function parseDataExcel(valor){
+    if(valor===null||valor===undefined||valor==='')return null;
+    if(valor instanceof Date)return isNaN(valor)?null:valor;
+    if(typeof valor==='number'){
+      // Serial Excel: dias desde 1899-12-30. Extrai Y/M/D em UTC e reconstrói local.
+      const d=new Date(Math.round((valor-25569)*86400*1000));
+      if(isNaN(d))return null;
+      return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+    }
+    if(typeof valor==='string'){
+      const partes=valor.trim().split('/');
+      if(partes.length===3){
+        const[p1,p2,p3]=partes.map(Number);
+        if(!p1||!p2||!p3)return null;
+        // Heurística: se p3 (campo "ano") > 31, formato é MM/DD/YYYY (americano);
+        // caso contrário, assume DD/MM/YYYY (brasileiro)
+        if(p3>31)return new Date(p3, p1-1, p2);
+        return new Date(p3, p2-1, p1);
+      }
+      // Tenta YYYY-MM-DD
+      const m=valor.trim().match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+      if(m)return new Date(+m[1], +m[2]-1, +m[3]);
+    }
+    return null;
+  }
+
   function parseData(v){
     if(v===null||v===undefined||v==='')return null;
     if(typeof v==='number'){
-      const ms=(v-25569)*86400*1000;
-      const d=new Date(ms);
+      // Serial Excel → string YYYY-MM-DD (em UTC para evitar shift de fuso)
+      const d=new Date(Math.round((v-25569)*86400*1000));
       if(isNaN(d))return null;
-      return d.toISOString().slice(0,10);
+      return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
     }
     const s=String(v).trim();
     if(!s)return null;
@@ -3426,68 +3488,145 @@ function expandBusca(busca){
   }
 
   // ===== CALENDÁRIO MENSAL =====
-  let _calCurrentMonth=null;   // 'YYYY-MM'
+  let _calCurrentMonth=null;   // 'YYYY-MM' (modo "month")
+  let _calMode='month';        // 'month' | 'range'
+  let _calRange={de:null,ate:null}; // strings YYYY-MM-DD (modo "range")
+  let _calAllRows=[];          // dados completos do upload (independente do filtro global)
 
   function getMonthsInRange(rows){
     if(!rows.length)return [];
     const set=new Set(rows.map(r=>r.venc.slice(0,7)));
     return [...set].sort();
   }
+  // Detecta o mês com maior nº de lançamentos (usado como inicial após upload)
+  function detectarMesPico(rows){
+    if(!rows||!rows.length)return null;
+    const cnt={};
+    rows.forEach(r=>{const m=r.venc.slice(0,7); cnt[m]=(cnt[m]||0)+1;});
+    return Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0][0];
+  }
+  // Devolve as rows que devem aparecer no calendário/resumo, conforme o seletor de período
+  function getRowsCalendario(){
+    const base=_calAllRows||[];
+    if(_calMode==='range'){
+      const{de,ate}=_calRange;
+      if(!de||!ate)return [];
+      return base.filter(r=>r.venc>=de && r.venc<=ate);
+    }
+    // modo 'month'
+    if(!_calCurrentMonth)return [];
+    return base.filter(r=>r.venc.slice(0,7)===_calCurrentMonth);
+  }
+  // Label do período ativo (para o badge no header)
+  function labelPeriodoAtivo(){
+    if(_calMode==='range'){
+      const{de,ate}=_calRange;
+      if(!de||!ate)return '—';
+      const f=s=>{const[y,m,d]=s.split('-');return `${d}/${m}/${y.slice(2)}`;};
+      return `${f(de)} a ${f(ate)}`;
+    }
+    if(!_calCurrentMonth)return '—';
+    const d=parseYmdLocal(_calCurrentMonth+'-01');
+    if(!d)return _calCurrentMonth;
+    const lbl=d.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+    return lbl.charAt(0).toUpperCase()+lbl.slice(1);
+  }
+  // Popula o <select> de meses com os meses disponíveis nos dados
+  function populateSeletorMeses(){
+    const sel=Q('fin-cal-select-mes'); if(!sel)return;
+    const meses=getMonthsInRange(_calAllRows||[]);
+    if(!meses.length){sel.innerHTML='<option value="">—</option>';return;}
+    if(!_calCurrentMonth || !meses.includes(_calCurrentMonth))_calCurrentMonth=meses[0];
+    const labels={1:'Janeiro',2:'Fevereiro',3:'Março',4:'Abril',5:'Maio',6:'Junho',7:'Julho',8:'Agosto',9:'Setembro',10:'Outubro',11:'Novembro',12:'Dezembro'};
+    sel.innerHTML=meses.map(m=>{
+      const[y,mm]=m.split('-').map(Number);
+      return `<option value="${m}"${m===_calCurrentMonth?' selected':''}>${labels[mm]} ${y}</option>`;
+    }).join('');
+    // Habilita/desabilita setas
+    const idx=meses.indexOf(_calCurrentMonth);
+    const prev=Q('fin-cal-prev-mes'), next=Q('fin-cal-next-mes');
+    if(prev)prev.disabled=idx<=0;
+    if(next)next.disabled=idx>=meses.length-1;
+  }
+  // Reflete o modo ativo (mostra/oculta blocos do seletor)
+  function refletirModoSeletor(){
+    const tBtns=document.querySelectorAll('#fin-cal-period-bar .fin-cal-mode-btn');
+    tBtns.forEach(b=>b.classList.toggle('active', b.dataset.mode===_calMode));
+    const blocoMes=document.querySelector('#fin-cal-period-bar .fin-cal-mode-month');
+    const blocoRng=document.querySelector('#fin-cal-period-bar .fin-cal-mode-range');
+    if(blocoMes)blocoMes.style.display=_calMode==='month'?'':'none';
+    if(blocoRng)blocoRng.style.display=_calMode==='range'?'':'none';
+  }
 
+  // O parâmetro `rows` é mantido por compatibilidade mas não é usado diretamente.
+  // O calendário usa _calAllRows (todos os lançamentos importados) + filtro do seletor próprio.
   function renderCalendar(rows){
     const grid=Q('fin-cal-grid'); if(!grid)return;
-    const monthsAvail=getMonthsInRange(rows);
-    if(!monthsAvail.length){
+    // Atualiza seletor sempre (popula meses, refresca modo, etc.)
+    populateSeletorMeses();
+    refletirModoSeletor();
+    // Atualiza badge no header
+    Q('fin-cal-month-label').textContent=labelPeriodoAtivo();
+    if(!_calAllRows.length){
       grid.innerHTML='';
       Q('fin-cal-info').textContent='Sem dados — importe os XLS para ver o calendário.';
-      Q('fin-cal-month-label').textContent='—';
-      Q('fin-cal-prev').disabled=true;
-      Q('fin-cal-next').disabled=true;
       return;
     }
-    if(!_calCurrentMonth || !monthsAvail.includes(_calCurrentMonth)){
-      _calCurrentMonth=monthsAvail[0];
+    const periodRows=getRowsCalendario();
+    if(!periodRows.length){
+      grid.innerHTML='<div style="grid-column:1/-1;padding:32px;text-align:center;color:var(--fin-muted);font-style:italic">Nenhum vencimento neste período.</div>';
+      Q('fin-cal-info').textContent='—';
+      return;
     }
-    const idx=monthsAvail.indexOf(_calCurrentMonth);
-    Q('fin-cal-prev').disabled=idx<=0;
-    Q('fin-cal-next').disabled=idx>=monthsAvail.length-1;
-    // Lançamentos no período visível
-    const periodRows=rows; // já filtrado pelo dashboard
-    // Média diária do período: total / dias com lançamentos
+    // Determina os limites do grid: data mínima/máxima a exibir
+    let firstDay, lastDay;
+    if(_calMode==='range'){
+      firstDay=parseYmdLocal(_calRange.de);
+      lastDay =parseYmdLocal(_calRange.ate);
+    }else{
+      firstDay=parseYmdLocal(_calCurrentMonth+'-01');
+      // último dia do mês (constrói local: dia 0 do mês seguinte)
+      const[y,m]=_calCurrentMonth.split('-').map(Number);
+      lastDay=new Date(y,m,0);
+    }
+    if(!firstDay||!lastDay){
+      grid.innerHTML='';
+      Q('fin-cal-info').textContent='Período inválido.';
+      return;
+    }
+    // Estatísticas do período
     const totalGeral=periodRows.reduce((s,r)=>s+r.valor,0);
     const diasComLanc=new Set(periodRows.map(r=>r.venc)).size;
     const mediaDia=diasComLanc>0?totalGeral/diasComLanc:0;
-    // Por dia (mês visível)
     const porDia={};
     periodRows.forEach(r=>{
-      if(r.venc.slice(0,7)!==_calCurrentMonth)return;
       if(!porDia[r.venc])porDia[r.venc]={sum:0,count:0,hasOverdue:false};
       porDia[r.venc].sum+=r.valor;
       porDia[r.venc].count++;
       if(r.periodo==='ATRASADO')porDia[r.venc].hasOverdue=true;
     });
-    const monthLabel=new Date(_calCurrentMonth+'-01').toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
-    Q('fin-cal-month-label').textContent=monthLabel.charAt(0).toUpperCase()+monthLabel.slice(1);
-    Q('fin-cal-info').innerHTML=`Média diária do período: <strong>${brl(mediaDia)}</strong> · ${diasComLanc} dia(s) com lançamentos`;
-    // Monta grid (segunda como 1ª coluna)
-    const[y,m]=_calCurrentMonth.split('-').map(Number);
-    const firstDay=new Date(y,m-1,1);
-    const lastDay=new Date(y,m,0); // último dia do mês
+    Q('fin-cal-info').innerHTML=`Média diária do período: <strong>${brl(mediaDia)}</strong> · ${diasComLanc} dia(s) com lançamentos · Total ${brl(totalGeral)}`;
+    // Monta grid (segunda como 1ª coluna). Itera dia a dia entre firstDay e lastDay.
     const startCol=(firstDay.getDay()+6)%7; // 0=seg
-    const totalCells=Math.ceil((startCol+lastDay.getDate())/7)*7;
+    // Para grid completo: começa na segunda da semana de firstDay
+    const gridStart=new Date(firstDay); gridStart.setDate(firstDay.getDate()-startCol);
+    const totalDays=Math.round((lastDay-firstDay)/86400000)+1;
+    const totalCells=Math.ceil((startCol+totalDays)/7)*7;
     const fdeC=window.finGetFiltroDataExtra && window.finGetFiltroDataExtra();
     const selDay=fdeC && fdeC.de===fdeC.ate ? fdeC.de : null;
     let html='';
     for(let i=0;i<totalCells;i++){
-      const dayNum=i-startCol+1;
-      if(dayNum<1||dayNum>lastDay.getDate()){
+      const cellDate=new Date(gridStart); cellDate.setDate(gridStart.getDate()+i);
+      const inRange=(cellDate>=firstDay && cellDate<=lastDay);
+      if(!inRange){
         html+='<div class="fin-cal-day outside"></div>';
         continue;
       }
-      const ymd=`${y}-${String(m).padStart(2,'0')}-${String(dayNum).padStart(2,'0')}`;
+      const y=cellDate.getFullYear(), m=cellDate.getMonth()+1, d=cellDate.getDate();
+      const ymd=`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
       const data=porDia[ymd];
       if(!data){
-        html+=`<div class="fin-cal-day"><span class="fin-cal-day-num">${dayNum}</span></div>`;
+        html+=`<div class="fin-cal-day"><span class="fin-cal-day-num">${d}</span></div>`;
         continue;
       }
       let dotClass='ok';
@@ -3499,7 +3638,7 @@ function expandBusca(busca){
       const overdueCls=data.hasOverdue?' overdue':'';
       const selCls=selDay===ymd?' selected':'';
       html+=`<div class="fin-cal-day has-data${overdueCls}${selCls}" data-day="${ymd}" title="${brl(data.sum)} em ${data.count} lanç.">
-        <span class="fin-cal-day-num">${dayNum}</span>
+        <span class="fin-cal-day-num">${d}</span>
         <span class="fin-cal-dot ${dotClass}"></span>
         <span class="fin-cal-day-val">${brl(data.sum).replace('R$ ','')}</span>
         <span class="fin-cal-day-count">${data.count} lanç.</span>
@@ -3509,17 +3648,17 @@ function expandBusca(busca){
   }
 
   // ===== RESUMO SEMANAL =====
+  // Idem ao calendário: usa _calAllRows + filtro do seletor próprio (independente do dashboard).
   function renderWeekSummary(rows){
     const tbody=Q('fin-week-tbody'); if(!tbody)return;
-    Q('fin-week-month-label').textContent=Q('fin-cal-month-label').textContent||'—';
-    if(!_calCurrentMonth || !rows.length){
+    Q('fin-week-month-label').textContent=labelPeriodoAtivo();
+    if(!_calAllRows.length){
       tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--fin-muted);padding:20px">Sem dados.</td></tr>';
       return;
     }
-    // Lançamentos do mês visível
-    const monthRows=rows.filter(r=>r.venc.slice(0,7)===_calCurrentMonth);
+    const monthRows=getRowsCalendario();
     if(!monthRows.length){
-      tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--fin-muted);padding:20px">Sem lançamentos neste mês.</td></tr>';
+      tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--fin-muted);padding:20px;font-style:italic">Nenhum vencimento neste período.</td></tr>';
       return;
     }
     // Define semanas: agrupa por segunda
@@ -3727,7 +3866,11 @@ function expandBusca(busca){
   function renderDashboard(rows,aportes,timestamp){
     rows=rows||[]; aportes=aportes||[];
     if(typeof window.finInit==='function')window.finInit(rows);
-    _calCurrentMonth=null;
+    // Calendário/Resumo Semanal: estado próprio (independente do filtro global do dashboard)
+    _calAllRows=rows;
+    _calMode='month';
+    _calRange={de:null,ate:null};
+    _calCurrentMonth=detectarMesPico(rows); // abre no mês de maior concentração (ou null se sem dados)
     renderKPIs(rows);
     renderChart(rows);
     renderCalendar(rows);
@@ -3909,21 +4052,95 @@ function expandBusca(busca){
         if(window.finSetFiltroDataExtra)window.finSetFiltroDataExtra(d,d,`Dia ${fmtDate(d)}`);
       });
     }
-    // Navegação prev/next do calendário
-    const calPrev=Q('fin-cal-prev'), calNext=Q('fin-cal-next');
+    // ===== Seletor de período do calendário =====
     const navMonth=(dir)=>{
-      const months=getMonthsInRange(_lastRows||[]);
+      const months=getMonthsInRange(_calAllRows||[]);
       if(!months.length)return;
       let idx=months.indexOf(_calCurrentMonth);
       if(idx<0)idx=0;
       const ni=idx+dir;
       if(ni<0||ni>=months.length)return;
+      _calMode='month';
       _calCurrentMonth=months[ni];
-      renderCalendar(_lastRows||[]);
-      renderWeekSummary(_lastRows||[]);
+      renderCalendar();
+      renderWeekSummary();
     };
-    if(calPrev)calPrev.onclick=()=>navMonth(-1);
-    if(calNext)calNext.onclick=()=>navMonth(1);
+    const calPrev=Q('fin-cal-prev-mes'), calNext=Q('fin-cal-next-mes');
+    if(calPrev && !calPrev.dataset.bound){calPrev.dataset.bound='1';calPrev.onclick=()=>navMonth(-1);}
+    if(calNext && !calNext.dataset.bound){calNext.dataset.bound='1';calNext.onclick=()=>navMonth(1);}
+    // Dropdown de mês
+    const selMes=Q('fin-cal-select-mes');
+    if(selMes && !selMes.dataset.bound){
+      selMes.dataset.bound='1';
+      selMes.addEventListener('change',()=>{
+        if(!selMes.value)return;
+        _calMode='month';
+        _calCurrentMonth=selMes.value;
+        renderCalendar();
+        renderWeekSummary();
+      });
+    }
+    // Toggle Modo: Por mês / Período livre
+    document.querySelectorAll('#fin-cal-period-bar .fin-cal-mode-btn').forEach(btn=>{
+      if(btn.dataset.bound)return;
+      btn.dataset.bound='1';
+      btn.onclick=()=>{
+        const mode=btn.dataset.mode;
+        if(mode!=='month' && mode!=='range')return;
+        _calMode=mode;
+        if(mode==='range'){
+          // Sugere range com base no mês atual ou nos limites dos dados
+          if(!_calRange.de || !_calRange.ate){
+            const months=getMonthsInRange(_calAllRows||[]);
+            if(_calCurrentMonth){
+              const[y,m]=_calCurrentMonth.split('-').map(Number);
+              const last=new Date(y,m,0).getDate();
+              _calRange.de=`${y}-${String(m).padStart(2,'0')}-01`;
+              _calRange.ate=`${y}-${String(m).padStart(2,'0')}-${String(last).padStart(2,'0')}`;
+            }else if(months.length){
+              const venc=(_calAllRows||[]).map(r=>r.venc).sort();
+              _calRange.de=venc[0]; _calRange.ate=venc[venc.length-1];
+            }
+          }
+          const inDe=Q('fin-cal-range-de'), inAte=Q('fin-cal-range-ate');
+          if(inDe)inDe.value=_calRange.de||'';
+          if(inAte)inAte.value=_calRange.ate||'';
+        }
+        renderCalendar();
+        renderWeekSummary();
+      };
+    });
+    // Aplicar range
+    const btnApl=Q('fin-cal-range-aplicar');
+    if(btnApl && !btnApl.dataset.bound){
+      btnApl.dataset.bound='1';
+      btnApl.onclick=()=>{
+        const de=Q('fin-cal-range-de').value;
+        const ate=Q('fin-cal-range-ate').value;
+        if(!de||!ate){alert('Informe as duas datas: De e Até.');return;}
+        if(de>ate){alert('Data inicial precisa ser anterior ou igual à data final.');return;}
+        _calMode='range';
+        _calRange={de,ate};
+        renderCalendar();
+        renderWeekSummary();
+      };
+    }
+    // Limpar range → volta ao Modo "Por mês"
+    const btnLim=Q('fin-cal-range-limpar');
+    if(btnLim && !btnLim.dataset.bound){
+      btnLim.dataset.bound='1';
+      btnLim.onclick=()=>{
+        _calRange={de:null,ate:null};
+        const inDe=Q('fin-cal-range-de'), inAte=Q('fin-cal-range-ate');
+        if(inDe)inDe.value=''; if(inAte)inAte.value='';
+        _calMode='month';
+        // Garante que _calCurrentMonth aponta para um mês existente
+        const months=getMonthsInRange(_calAllRows||[]);
+        if(!_calCurrentMonth || !months.includes(_calCurrentMonth))_calCurrentMonth=detectarMesPico(_calAllRows);
+        renderCalendar();
+        renderWeekSummary();
+      };
+    }
     // Delegação: clique em raiz/sub do modal expande/colapsa; lanc não faz nada
     const classifBox=Q('fin-venc-classif');
     if(classifBox && !classifBox.dataset.bound){
