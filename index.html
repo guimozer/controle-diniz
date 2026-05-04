@@ -357,31 +357,42 @@ tr.r-done td{opacity:.5}
 .fin-module .fin-cal-mode-btn{background:none;border:none;padding:6px 14px;font-size:12px;font-weight:600;color:var(--fin-muted);cursor:pointer;font-family:var(--font);transition:all .15s}
 .fin-module .fin-cal-mode-btn:hover{color:var(--fin-accent)}
 .fin-module .fin-cal-mode-btn.active{background:var(--fin-accent);color:#fff}
-.fin-module .fin-cal-mode-month,.fin-module .fin-cal-mode-range{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:12px}
+.fin-module .fin-cal-mode-month,.fin-module .fin-cal-mode-range{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px}
 .fin-module .fin-cal-mode-month select,.fin-module .fin-cal-mode-range input[type=date]{padding:5px 8px;border:1px solid var(--fin-border);border-radius:6px;font-size:12px;font-family:var(--font);background:#fff}
 .fin-module .fin-cal-mode-month select{min-width:160px}
 .fin-module .fin-cal-mode-range label{display:flex;gap:4px;align-items:center;color:var(--fin-muted)}
+/* Botões de texto da range bar (Aplicar/Limpar): override do .fin-cal-btn que é dimensionado p/ ícone */
+.fin-module .fin-cal-mode-range button.fin-cal-btn{width:auto;height:auto;padding:5px 12px;font-size:12px;font-weight:600;white-space:nowrap}
 .fin-module .fin-cal-info strong{color:var(--fin-text)}
 .fin-module .fin-cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;font-size:9px;font-weight:700;color:var(--fin-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;padding:0 2px}
 .fin-module .fin-cal-weekdays span{text-align:center}
 .fin-module .fin-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
 .fin-module .fin-cal-day{position:relative;background:var(--fin-card2);border:1px solid var(--fin-border);border-radius:6px;padding:6px 6px 4px;min-height:60px;display:flex;flex-direction:column;font-size:10px;cursor:default;transition:all .15s}
-.fin-module .fin-cal-day.has-data{cursor:pointer;background:#fff}
-.fin-module .fin-cal-day.has-data:hover{border-color:var(--fin-accent);background:#fafafa}
+.fin-module .fin-cal-day.has-data{cursor:pointer}
+.fin-module .fin-cal-day.has-data:hover{filter:brightness(.96);box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .fin-module .fin-cal-day.outside{opacity:.35;background:transparent;border-color:transparent}
-.fin-module .fin-cal-day.overdue{border-color:var(--fin-red);border-width:1.5px}
 .fin-module .fin-cal-day.selected{outline:2px solid var(--fin-accent);outline-offset:1px}
 .fin-module .fin-cal-day-num{font-weight:700;color:var(--fin-text);font-size:11px}
 .fin-module .fin-cal-day-val{margin-top:auto;font-size:10px;font-weight:600;color:var(--fin-text);font-variant-numeric:tabular-nums;line-height:1.2;word-break:break-all}
 .fin-module .fin-cal-day-count{font-size:9px;color:var(--fin-muted);margin-top:2px}
-.fin-module .fin-cal-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
-.fin-module .fin-cal-day .fin-cal-dot{position:absolute;top:6px;right:6px}
-.fin-module .fin-cal-dot.ok{background:var(--fin-green)}
-.fin-module .fin-cal-dot.warn{background:var(--fin-yellow)}
-.fin-module .fin-cal-dot.crit{background:var(--fin-red)}
+/* Cards do calendário coloridos por nível de risco (substituem a bolinha) */
+.fin-module .fin-cal-day.has-data.lvl-ok  {background:#f0fdf4;border-color:#86efac}
+.fin-module .fin-cal-day.has-data.lvl-warn{background:#fefce8;border-color:#fde047}
+.fin-module .fin-cal-day.has-data.lvl-crit{background:#fef2f2;border-color:#fca5a5}
+.fin-module .fin-cal-day.has-data.lvl-ok   .fin-cal-day-num{color:#16a34a}
+.fin-module .fin-cal-day.has-data.lvl-warn .fin-cal-day-num{color:#ca8a04}
+.fin-module .fin-cal-day.has-data.lvl-crit .fin-cal-day-num{color:#dc2626}
+/* Vencido (passado): borda vermelha + fundo próprio. Sobrescreve o nível p/ deixar claro. */
+.fin-module .fin-cal-day.has-data.overdue{background:#fff5f5;border-color:var(--fin-red);border-width:1.5px}
+.fin-module .fin-cal-day.has-data.overdue .fin-cal-day-num{color:#dc2626}
+/* Legenda: chips coloridos no padrão dos cards */
 .fin-module .fin-cal-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font-size:10px;color:var(--fin-muted)}
 .fin-module .fin-cal-leg-item{display:inline-flex;align-items:center;gap:5px}
-.fin-module .fin-cal-overdue-marker{width:10px;height:10px;border:1.5px solid var(--fin-red);border-radius:3px;background:transparent;display:inline-block}
+.fin-module .fin-cal-leg-chip{width:14px;height:14px;border-radius:4px;border:1px solid;display:inline-block}
+.fin-module .fin-cal-leg-chip.ok  {background:#f0fdf4;border-color:#86efac}
+.fin-module .fin-cal-leg-chip.warn{background:#fefce8;border-color:#fde047}
+.fin-module .fin-cal-leg-chip.crit{background:#fef2f2;border-color:#fca5a5}
+.fin-module .fin-cal-leg-chip.overdue{background:#fff5f5;border-color:var(--fin-red);border-width:1.5px}
 
 /* Resumo semanal */
 .fin-module .fin-week-wrap{overflow-x:auto}
@@ -1011,10 +1022,10 @@ tr.r-done td{opacity:.5}
               </div>
               <div class="fin-cal-grid" id="fin-cal-grid"></div>
               <div class="fin-cal-legend">
-                <span class="fin-cal-leg-item"><span class="fin-cal-dot ok"></span>≤ 1,2× média</span>
-                <span class="fin-cal-leg-item"><span class="fin-cal-dot warn"></span>1,2× a 2× média</span>
-                <span class="fin-cal-leg-item"><span class="fin-cal-dot crit"></span>&gt; 2× média</span>
-                <span class="fin-cal-leg-item"><span class="fin-cal-overdue-marker"></span>vencido (passado)</span>
+                <span class="fin-cal-leg-item"><span class="fin-cal-leg-chip ok"></span>≤ 1,2× média</span>
+                <span class="fin-cal-leg-item"><span class="fin-cal-leg-chip warn"></span>1,2× a 2× média</span>
+                <span class="fin-cal-leg-item"><span class="fin-cal-leg-chip crit"></span>&gt; 2× média</span>
+                <span class="fin-cal-leg-item"><span class="fin-cal-leg-chip overdue"></span>vencido (passado)</span>
               </div>
             </div>
           </div>
@@ -3629,17 +3640,18 @@ function expandBusca(busca){
         html+=`<div class="fin-cal-day"><span class="fin-cal-day-num">${d}</span></div>`;
         continue;
       }
-      let dotClass='ok';
+      let lvlClass='ok';
       if(mediaDia>0){
         const ratio=data.sum/mediaDia;
-        if(ratio>2)dotClass='crit';
-        else if(ratio>1.2)dotClass='warn';
+        if(ratio>2)lvlClass='crit';
+        else if(ratio>1.2)lvlClass='warn';
       }
       const overdueCls=data.hasOverdue?' overdue':'';
       const selCls=selDay===ymd?' selected':'';
-      html+=`<div class="fin-cal-day has-data${overdueCls}${selCls}" data-day="${ymd}" title="${brl(data.sum)} em ${data.count} lanç.">
+      // Card recebe a classe lvl-* para colorir o fundo (substituiu a bolinha).
+      // overdue, quando presente, sobrescreve a cor do nível.
+      html+=`<div class="fin-cal-day has-data lvl-${lvlClass}${overdueCls}${selCls}" data-day="${ymd}" title="${brl(data.sum)} em ${data.count} lanç.">
         <span class="fin-cal-day-num">${d}</span>
-        <span class="fin-cal-dot ${dotClass}"></span>
         <span class="fin-cal-day-val">${brl(data.sum).replace('R$ ','')}</span>
         <span class="fin-cal-day-count">${data.count} lanç.</span>
       </div>`;
