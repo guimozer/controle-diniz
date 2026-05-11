@@ -2524,7 +2524,7 @@ const PLANO_DE_CONTAS = {
     _tipo: "raiz",
     subRaizes: {
       "ALUGUEL/CONDOMÍNIO": ["ALUGUEL (ESCRITÓRIO)","ALUGUEL (LOJA DE RUA)","ALUGUEL (SHOPPING)","ALUGUEL PERCENTUAL (SHOPPING)","CONDOMÍNIO (SHOPPING)","CONFISSÃO DE DÍVIDA"],
-      "BONIFICAÇÃO": ["BONIFICAÇÕES","BONIFICAÇÕES DE VENDAS","BONIFICAÇÕES DIVERSAS","INDICAÇÃO DE CLIENTES"],
+      "BONIFICAÇÃO": ["BONIFICAÇÕES DE VENDAS","BONIFICAÇÕES DIVERSAS","INDICAÇÃO DE CLIENTES"],
       "CANCELAMENTO DE VENDA/TROCA": ["DEVOLUÇÃO"],
       "ENCARGOS GERAIS (SHOPPING)": ["ALARME DE INCÊNDIO (SHOPPING)","AR-CONDICIONADO (SHOPPING)","DIVERSOS (SHOPPING)","ENCARGO COMUM (SHOPPING)","ENERGIA (SHOPPING)","IPTU (SHOPPING)","TAXA DE TRANSFERÊNCIA","ÁGUA (SHOPPING)"],
       "ENERGIA": ["ENERGIA (CONSULTÓRIO)","ENERGIA (ESCRITÓRIO)","ENERGIA (LOJA DE RUA)"],
@@ -2543,10 +2543,9 @@ const PLANO_DE_CONTAS = {
   "DESPESAS FINANCEIRAS": {
     _tipo: "raiz",
     subRaizes: {
-      "ALUGUEL DAS MAQUINETAS": ["CIELO","REDE"],
-      "JUROS E MULTA": []
+      "ALUGUEL DAS MAQUINETAS": ["CIELO","REDE"]
     },
-    detalhes: ["CARTÕES","CDL (SPC)","DESPESAS E TAXAS BANCÁRIAS","EMPRÉSTIMO/CAPITAL DE GIRO (PAGAR)","EMPRÉSTIMO/SÓCIO (PAGAR)","FINANCEIRAS","IOF","JUROS DE ANTECIPAÇÃO","JUROS DE EMPRÉSTIMOS","TAXAS - CARTÃO","TAXAS E JUROS"]
+    detalhes: ["CARTÕES","CDL (SPC)","DESPESAS E TAXAS BANCÁRIAS","EMPRÉSTIMO/CAPITAL DE GIRO (PAGAR)","EMPRÉSTIMO/SÓCIO (PAGAR)","FINANCEIRAS","IOF","JUROS DE ANTECIPAÇÃO","JUROS DE EMPRÉSTIMOS","JUROS E MULTA","TAXAS - CARTÃO","TAXAS E JUROS"]
   },
   "DESPESAS LABORATÓRIO": {
     _tipo: "raiz",
@@ -2592,6 +2591,35 @@ const PLANO_DE_CONTAS = {
   "MARKETING E PUBLICIDADE": {
     _tipo: "raiz",
     detalhes: ["ADESIVOS","AGÊNCIA MARKETING","BLOGUEIRAS","BRINDES/BONIFICAÇÃO","CARRO DE SOM","CARTÕES DE VISITA","DESPESAS DIVERSAS - MARKETING","EQUIPE PANFLETAGEM","FOTÓGRAFO","FUNDO DE PROMOÇÃO (SHOPPING)","LOCUTOR","MARCAS E PATENTES","MATERIAL GRÁFICO","MÍDIA INAUGURAL","PANFLETOS","PATROCÍNIO DE EVENTOS","REDES SOCIAIS","RÁDIO E TV"]
+  },
+  "FINANCEIRO NÃO-OPERACIONAL": {
+    _tipo: "raiz",
+    subRaizes: {
+      "EMPRÉSTIMO/SÓCIO": ["EMPREST<>SÓCIO (ENTRADA)","EMPREST<>SÓCIOS (SAÍDA)"],
+      "EMPRÉSTIMO/EMPRESAS": ["EMPREST<>EMPRESAS (SAÍDA)"],
+      "TRANSFERÊNCIA BANCÁRIA": ["TRANSFERÊNCIA BANCÁRIA"]
+    },
+    detalhes: ["EMPRESTIMO/SOCIO (PAGAR)","DISTRIBUIÇÃO DE LUCROS"]
+  },
+  "CUSTO VARIÁVEL": {
+    _tipo: "raiz",
+    detalhes: ["CREDITOS DE CLIENTES","ORDENS DE COMPRA"]
+  },
+  "TRANSFERÊNCIA - SAÍDA": {
+    _tipo: "raiz",
+    detalhes: ["RETIRADA DE CAIXA","SANGRIA (DEPÓSITO NA CONTA DA EMPRESA)"]
+  },
+  "CONTAS A PAGAR": {
+    _tipo: "raiz",
+    detalhes: ["CARTÃO DE CRÉDITO EMPRESA"]
+  },
+  "CONTAS A RECEBER": {
+    _tipo: "raiz",
+    detalhes: ["EMPREST<>SÓCIO (ENTRADA)"]
+  },
+  "TAXA DE CANCELAMENTO 3584": {
+    _tipo: "raiz",
+    detalhes: ["TAXA DE CANCELAMENTO 3584"]
   }
 };
 
@@ -4407,6 +4435,15 @@ function expandBusca(busca){
     'Status','Periodo','Origem',
     'Eh_Aporte','Eh_Duplicado','Tem_Alerta','Tipos_Alerta',
   ];
+  // Classificações informativas (não contam como operacional). Usadas no fallback
+  // de Eh_Operacional para datasets antigos (29 colunas, antes de 07/05/2026).
+  const CLASSIFICACOES_INFORMATIVAS=[
+    "EMPREST<>SÓCIO (ENTRADA)",
+    "EMPREST<>SÓCIOS (SAÍDA)",
+    "EMPREST<>EMPRESAS (SAÍDA)",
+    "EMPRESTIMO/SOCIO (PAGAR)",
+    "TRANSFERÊNCIA BANCÁRIA"
+  ];
   function parseExcelDate(v){
     if(v===null||v===undefined||v==='')return null;
     if(typeof v==='number'){
@@ -4447,6 +4484,8 @@ function expandBusca(busca){
           COLUNAS_OBRIGATORIAS.forEach(c=>{idx[c]=headers.indexOf(c);});
           const faltantes=COLUNAS_OBRIGATORIAS.filter(c=>idx[c]<0);
           if(faltantes.length)throw new Error('Colunas obrigatórias ausentes: '+faltantes.join(', '));
+          // Eh_Operacional é opcional (datasets antes de 07/05/2026 têm 29 colunas, sem ela).
+          const ehOperacionalIdx=headers.indexOf('Eh_Operacional');
           const out=[];
           for(let i=1;i<matrix.length;i++){
             const r=matrix[i]; if(!r||!r.length)continue;
@@ -4481,6 +4520,11 @@ function expandBusca(busca){
               temAlerta:ehSim(r[idx.Tem_Alerta]),
               tiposAlerta:String(r[idx.Tipos_Alerta]||'').split('|').map(s=>s.trim()).filter(Boolean),
             };
+            // Compatibilidade: datasets antes de 07/05/2026 têm 29 colunas (sem Eh_Operacional).
+            // Derivar quando a coluna não existir.
+            row.ehOperacional = ehOperacionalIdx>=0
+              ? ehSim(r[ehOperacionalIdx])
+              : (!row.ehAporte && !CLASSIFICACOES_INFORMATIVAS.includes(row.classificacao));
             // Linha precisa ter Tipo_Registro
             if(!row.tipoRegistro)continue;
             out.push(row);
@@ -4498,7 +4542,7 @@ function expandBusca(busca){
   // Nunca somar V_Original sem filtrar Tipo_Registro — causa dupla contagem.
   function isComp(r){return r.tipoRegistro==='Compromisso';}
   function isDesemb(r){return r.tipoRegistro==='Desembolso';}
-  function isOperacional(r){return !r.ehAporte;}
+  function isOperacional(r){return r.ehOperacional===true;}
   function sumOrcado(rows){return rows.filter(r=>isComp(r)&&isOperacional(r)).reduce((s,r)=>s+r.vOriginal,0);}
   function sumDesembolsado(rows){return rows.filter(r=>isDesemb(r)&&isOperacional(r)).reduce((s,r)=>s+r.vOriginal,0);}
   function sumEmAberto(rows){return rows.filter(r=>isComp(r)&&r.status==='EM ABERTO').reduce((s,r)=>s+r.vOriginal,0);}
