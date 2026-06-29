@@ -273,6 +273,22 @@ tr.r-done td{opacity:.5}
 .fin-module .fin-badge{background:var(--fin-accent);color:#fff;font-size:11px;font-weight:600;padding:4px 14px;border-radius:20px;flex-shrink:0}
 .fin-module .fin-header-bottom{border-top:1px solid var(--fin-border);padding-top:12px}
 .fin-module .fin-header-label{font-size:10px;font-weight:700;color:var(--fin-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.fin-module .fin-tip{display:flex;align-items:flex-start;gap:10px;background:#eef2f7;border:1px solid #dde4ec;border-radius:var(--r-md);padding:10px 14px;margin-top:12px;font-size:12px;color:var(--fin-muted);line-height:1.5}
+.fin-module .fin-tip-icon{font-size:14px;line-height:1.4;flex-shrink:0}
+.fin-module .fin-tip-text{flex:1;min-width:0}
+.fin-module .fin-collapse{background:#eef2f7;border:1px solid #dde4ec;border-radius:var(--r-md);margin-top:12px;font-size:12px;color:var(--fin-muted);overflow:hidden}
+.fin-module .fin-collapse>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;padding:10px 14px;font-weight:600;color:var(--fin-muted);user-select:none;line-height:1.4}
+.fin-module .fin-collapse>summary::-webkit-details-marker{display:none}
+.fin-module .fin-collapse>summary::before{content:"▸";font-size:10px;color:var(--fin-muted);transition:transform .15s;flex-shrink:0;display:inline-block}
+.fin-module .fin-collapse[open]>summary::before{transform:rotate(90deg)}
+.fin-module .fin-collapse>summary:hover{background:rgba(0,0,0,.02)}
+.fin-module .fin-collapse-body{padding:2px 14px 12px;line-height:1.55;color:var(--fin-muted);border-top:1px solid #dde4ec;margin-top:2px}
+.fin-module .fin-collapse-body p{margin:8px 0}
+.fin-module .fin-collapse-body ul,.fin-module .fin-collapse-body ol{margin:4px 0 8px;padding-left:20px}
+.fin-module .fin-collapse-body li{margin:3px 0}
+.fin-module .fin-collapse-body strong{color:var(--fin-text);font-weight:600}
+.fin-module .fin-collapse-body em{font-style:italic;color:var(--fin-text)}
+.fin-module .fin-collapse-body code{background:#fff;border:1px solid #dde4ec;padding:1px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:var(--fin-text)}
 .fin-module .loja-switcher{display:flex;gap:6px;flex-wrap:wrap}
 .fin-module .loja-btn{display:flex;flex-direction:column;align-items:center;padding:7px 16px;border-radius:10px;cursor:pointer;border:1.5px solid var(--fin-border);background:#fff;transition:all .15s;min-width:110px;text-align:center}
 .fin-module .loja-btn:hover:not(.disabled){border-color:var(--fin-accent);background:#f5f3ff}
@@ -284,13 +300,11 @@ tr.r-done td{opacity:.5}
 .fin-module .loja-tag.ok{background:#dcfce7;color:#15803d}
 .fin-module .loja-tag.nd{background:#f1f5f9;color:#94a3b8}
 .fin-module .fin-main{padding:20px 28px;max-width:1400px;margin:0 auto}
-.fin-module .kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+.fin-module .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
 .fin-module .kpi{background:var(--fin-card);border:1px solid var(--fin-border);border-radius:12px;padding:16px 18px;position:relative;overflow:hidden;box-shadow:var(--fin-shadow)}
 .fin-module .kpi::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;border-radius:12px 12px 0 0}
 .fin-module .kpi.atrasado::before{background:var(--fin-red)}
-.fin-module .kpi.p30::before{background:var(--fin-orange)}
-.fin-module .kpi.p60::before{background:var(--fin-yellow)}
-.fin-module .kpi.p90::before{background:var(--fin-green)}
+.fin-module .kpi.avencer::before{background:var(--fin-blue)}
 .fin-module .kpi.total::before{background:var(--fin-accent)}
 .fin-module .kpi-label{color:var(--fin-muted);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
 .fin-module .kpi-value{font-size:20px;font-weight:800;color:#1a202c}
@@ -639,10 +653,14 @@ tr.r-done td{opacity:.5}
   .fin-module .fin-dropzone{padding:10px}
 }
 @media(max-width:768px){
-  .fin-module .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .fin-module .kpi-grid{grid-template-columns:repeat(3,1fr)}
   .fin-module .fin-two-col{grid-template-columns:1fr}
   .fin-module .fin-main{padding:14px}
   .fin-module .fin-header{padding:12px 14px}
+  .fin-module .fin-tip{padding:9px 11px;font-size:11px;gap:8px;margin-top:10px}
+  .fin-module .fin-collapse{margin-top:10px;font-size:11px}
+  .fin-module .fin-collapse>summary{padding:9px 11px}
+  .fin-module .fin-collapse-body{padding:2px 11px 10px}
   .fin-module .classif-name{width:120px}
   .fin-module .classif-val{width:80px;font-size:10px}
 }
@@ -925,6 +943,10 @@ tr.r-done td{opacity:.5}
               </div>
               <div class="fin-badge">PROSPECTIVO</div>
             </div>
+            <div class="fin-tip" role="note">
+              <span class="fin-tip-icon" aria-hidden="true">📍</span>
+              <span class="fin-tip-text">Qual arquivo subir: exporte do DATAWEB o plano de contas A VENCER do período. 1 arquivo XLS por razão social.</span>
+            </div>
             <div class="fin-header-bottom">
               <div class="fin-header-label">Selecionar loja</div>
               <div class="loja-switcher" id="fin-loja-switcher">
@@ -965,10 +987,8 @@ tr.r-done td{opacity:.5}
         <div class="fin-main">
 
           <div class="kpi-grid" id="fin-kpi-grid">
-            <div class="kpi atrasado"><div class="kpi-label">⚠️ Atrasado (vencido)</div><div class="kpi-filter-tag" id="fin-kpi-filter-atrasado"></div><div class="kpi-value" id="fin-kpi-atrasado">—</div><div class="kpi-sub" id="fin-kpi-atrasado-sub">aguardando importação</div></div>
-            <div class="kpi p30"><div class="kpi-label">0–30 dias</div><div class="kpi-filter-tag" id="fin-kpi-filter-30"></div><div class="kpi-value" id="fin-kpi-30">—</div><div class="kpi-sub" id="fin-kpi-30-sub">aguardando importação</div></div>
-            <div class="kpi p60"><div class="kpi-label">31–60 dias</div><div class="kpi-filter-tag" id="fin-kpi-filter-60"></div><div class="kpi-value" id="fin-kpi-60">—</div><div class="kpi-sub" id="fin-kpi-60-sub">aguardando importação</div></div>
-            <div class="kpi p90"><div class="kpi-label">61–90 dias</div><div class="kpi-filter-tag" id="fin-kpi-filter-90"></div><div class="kpi-value" id="fin-kpi-90">—</div><div class="kpi-sub" id="fin-kpi-90-sub">aguardando importação</div></div>
+            <div class="kpi atrasado"><div class="kpi-label">⚠️ Atrasado (já venceu)</div><div class="kpi-filter-tag" id="fin-kpi-filter-atrasado"></div><div class="kpi-value" id="fin-kpi-atrasado">—</div><div class="kpi-sub" id="fin-kpi-atrasado-sub">aguardando importação</div></div>
+            <div class="kpi avencer"><div class="kpi-label">A vencer</div><div class="kpi-filter-tag" id="fin-kpi-filter-avencer"></div><div class="kpi-value" id="fin-kpi-avencer">—</div><div class="kpi-sub" id="fin-kpi-avencer-sub">aguardando importação</div></div>
             <div class="kpi total"><div class="kpi-label">Total em aberto</div><div class="kpi-filter-tag" id="fin-kpi-filter-total"></div><div class="kpi-value" id="fin-kpi-total">—</div><div class="kpi-sub" id="fin-kpi-total-sub">aguardando importação</div></div>
           </div>
 
@@ -1164,6 +1184,24 @@ tr.r-done td{opacity:.5}
               </div>
               <div class="fin-badge">RETROSPECTIVO</div>
             </div>
+            <details class="fin-collapse">
+              <summary>📋 Como gerar a análise mensal (lembrete)</summary>
+              <div class="fin-collapse-body">
+                <p>Para gerar os outputs, envie os arquivos no chat de execução da loja no Claude Cowork e diga de qual loja é. Ex.: <em>"segue arquivos de Junho/2026 da Amazonas Shopping"</em>.</p>
+                <p><strong>Lojas de 1 razão social</strong> (Grande Circular, Sumaúma, Amazonas, Manacapuru) → 3 arquivos:</p>
+                <ul>
+                  <li><code>compromissos.xls</code> — Contas a Pagar, filtro Vencimento</li>
+                  <li><code>desembolsos.xls</code> — Contas a Pagar, filtro Pagamento</li>
+                  <li><code>recebimentos.xls</code> — Contas a Receber inteira (o script filtra o aporte sozinho)</li>
+                </ul>
+                <p><strong>Manauara</strong> → 7 arquivos: 3 compromissos + 3 desembolsos + 1 recebimentos consolidado (44, 63, TAR).</p>
+                <p><strong>O que volta, sempre:</strong></p>
+                <ol>
+                  <li>Planilha humana <code>&lt;Loja&gt;_&lt;Mês&gt;&lt;Ano&gt;_Analise_v6.xlsx</code></li>
+                  <li>Dataset BI <code>&lt;Loja&gt;_&lt;AAAA-MM&gt;_dataset_BI.xlsx</code></li>
+                </ol>
+              </div>
+            </details>
             <div class="fin-header-bottom">
               <div class="fin-header-label">Selecionar loja</div>
               <div class="loja-switcher" id="am-loja-switcher">
@@ -3380,25 +3418,19 @@ function expandBusca(busca){
 
   function renderKPIs(rows,filtroLabel){
     _lastRows=rows||[];                // cache para o modal de Vencidos
-    const grupos={ATRASADO:[],'0-30 dias':[],'31-60 dias':[],'61-90 dias':[],'91+ dias':[]};
-    rows.forEach(r=>{(grupos[r.periodo]||grupos['91+ dias']).push(r);});
+    const atrasados=rows.filter(r=>r.periodo==='ATRASADO');
+    const aVencer  =rows.filter(r=>r.periodo!=='ATRASADO');
     const sum=arr=>arr.reduce((s,r)=>s+r.valor,0);
-    const tA=sum(grupos.ATRASADO), t30=sum(grupos['0-30 dias']), t60=sum(grupos['31-60 dias']), t90=sum(grupos['61-90 dias']), t91=sum(grupos['91+ dias']);
-    const tot=tA+t30+t60+t90+t91;
+    const tA=sum(atrasados), tV=sum(aVencer), tot=tA+tV;
     Q('fin-kpi-atrasado').textContent=brl(tA);
-    Q('fin-kpi-atrasado-sub').textContent=`${grupos.ATRASADO.length} lançamento${grupos.ATRASADO.length===1?'':'s'}`;
-    Q('fin-kpi-30').textContent=brl(t30);
-    Q('fin-kpi-30-sub').textContent=`${grupos['0-30 dias'].length} lançamento${grupos['0-30 dias'].length===1?'':'s'}`;
-    Q('fin-kpi-60').textContent=brl(t60);
-    Q('fin-kpi-60-sub').textContent=`${grupos['31-60 dias'].length} lançamento${grupos['31-60 dias'].length===1?'':'s'}`;
-    Q('fin-kpi-90').textContent=brl(t90);
-    Q('fin-kpi-90-sub').textContent=`${grupos['61-90 dias'].length} lançamento${grupos['61-90 dias'].length===1?'':'s'}`;
+    Q('fin-kpi-atrasado-sub').textContent=`${atrasados.length} lançamento${atrasados.length===1?'':'s'}`;
+    Q('fin-kpi-avencer').textContent=brl(tV);
+    Q('fin-kpi-avencer-sub').textContent=`${aVencer.length} lançamento${aVencer.length===1?'':'s'}`;
     Q('fin-kpi-total').textContent=brl(tot);
-    const pctA=tot?(tA/tot*100).toFixed(1):'0';
-    Q('fin-kpi-total-sub').textContent=`${rows.length} lançamento${rows.length===1?'':'s'} · Atrasado: ${pctA}%`;
+    Q('fin-kpi-total-sub').textContent=`${rows.length} lançamento${rows.length===1?'':'s'}`;
     // Tag de filtro nos cards
     const grid=document.getElementById('fin-kpi-grid');
-    const ids=['fin-kpi-filter-atrasado','fin-kpi-filter-30','fin-kpi-filter-60','fin-kpi-filter-90','fin-kpi-filter-total'];
+    const ids=['fin-kpi-filter-atrasado','fin-kpi-filter-avencer','fin-kpi-filter-total'];
     if(filtroLabel){
       grid.classList.add('with-filter');
       ids.forEach(id=>{const el=Q(id); if(el)el.textContent=`🔍 Filtro: ${filtroLabel}`;});
