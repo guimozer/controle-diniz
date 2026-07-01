@@ -408,17 +408,6 @@ tr.r-done td{opacity:.5}
 .fin-module .fin-cal-leg-chip.crit{background:#fef2f2;border-color:#fca5a5}
 .fin-module .fin-cal-leg-chip.overdue{background:#fff5f5;border-color:var(--fin-red);border-width:1.5px}
 
-/* Resumo semanal */
-.fin-module .fin-week-wrap{overflow-x:auto}
-.fin-module .fin-week-table{width:100%;border-collapse:collapse;font-size:11px}
-.fin-module .fin-week-table th{background:var(--fin-card2);color:var(--fin-muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:8px 10px;text-align:left;border-bottom:1px solid var(--fin-border);font-size:10px}
-.fin-module .fin-week-table td{padding:7px 10px;border-bottom:1px solid #f1f5f9;color:var(--fin-text);vertical-align:middle}
-.fin-module .fin-week-table td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
-.fin-module .fin-week-status{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px}
-.fin-module .fin-week-status.crit{background:#fee2e2;color:var(--fin-red)}
-.fin-module .fin-week-status.warn{background:#fef9c3;color:var(--fin-yellow)}
-.fin-module .fin-week-status.ok{background:#dcfce7;color:var(--fin-green)}
-
 /* Barra de filtro extra de data (acima da tabela) */
 .fin-module .fin-data-extra-bar{display:flex;align-items:center;gap:10px;background:#eef2ff;border:1px solid #c7d2fe;border-radius:8px;padding:8px 12px;margin-bottom:10px;font-size:12px;color:var(--fin-accent)}
 .fin-module .fin-data-extra-bar strong{color:var(--fin-text)}
@@ -431,13 +420,6 @@ tr.r-done td{opacity:.5}
   .fin-module .fin-cal-day-val{font-size:9px}
   .fin-module .fin-cal-weekdays{font-size:8px}
 }
-.fin-module .classif-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
-.fin-module .classif-name{width:190px;flex-shrink:0;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fin-module .classif-bar-wrap{flex:1;background:#e2e8f0;border-radius:3px;height:8px;overflow:hidden;cursor:help}
-.fin-module .classif-bar{display:flex;height:100%;border-radius:3px;overflow:hidden;transition:width .3s}
-.fin-module .bar-seg-atr{background:var(--fin-red);height:100%;flex-shrink:0}
-.fin-module .bar-seg-ven{background:var(--fin-accent);height:100%;flex-shrink:0}
-.fin-module .classif-val{width:120px;text-align:right;font-size:11px;font-weight:700;flex-shrink:0}
 .fin-module .periodo-filtro-tag{font-size:10px;font-weight:600;color:var(--fin-accent);margin-left:8px;background:#eef2ff;padding:2px 8px;border-radius:10px}
 /* Tabela de Balancete (Por Classificação) */
 .fin-module .fin-balancete-wrap{overflow-x:auto}
@@ -547,22 +529,6 @@ tr.r-done td{opacity:.5}
 .fin-module .fin-search-wrap.has-text .fin-search-clear{display:inline-flex}
 .fin-module .fin-search-counter{display:none;font-size:11px;color:var(--fin-muted);margin-bottom:10px;padding:4px 8px;background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;width:fit-content}
 .fin-module .fin-search-counter.show{display:block}
-.fin-module .classif-row{cursor:pointer;border-radius:6px;padding:3px 4px;margin-bottom:4px;transition:background .15s}
-.fin-module .classif-row:hover{background:#f5f3ff}
-.fin-module .classif-row.selected{background:#eef2ff;outline:2px solid var(--fin-accent)}
-.fin-module .classif-row.dimmed{opacity:.45}
-/* Árvore de 3 níveis no Top 15 Categorias */
-.fin-module .tree-chev{display:inline-flex;align-items:center;justify-content:center;width:14px;font-size:10px;color:var(--fin-muted);flex-shrink:0;line-height:1;user-select:none}
-.fin-module .classif-row.lv-raiz{font-weight:700;padding:6px 4px;color:var(--fin-text)}
-.fin-module .classif-row.lv-raiz .tree-chev{color:var(--fin-text)}
-.fin-module .classif-row.lv-raiz:hover{background:#eef2ff}
-.fin-module .classif-row.lv-sub{padding:4px 4px 4px 28px;font-size:.92em;font-weight:500;color:var(--fin-text)}
-.fin-module .classif-row.lv-det{padding:3px 4px 3px 56px;font-size:.85em;color:var(--fin-muted);font-weight:400}
-.fin-module .classif-row.lv-sub .classif-bar-wrap{height:6px;opacity:.85}
-.fin-module .classif-row.lv-det .classif-bar-wrap{height:5px;opacity:.7}
-.fin-module .fin-clear-selection{background:#fee2e2;color:var(--fin-red);border:1px solid #fecaca;border-radius:6px;padding:3px 10px;font-size:10px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s}
-.fin-module .fin-clear-selection:hover{background:var(--fin-red);color:#fff;border-color:var(--fin-red)}
-.fin-module .fin-classif-controls{display:flex;align-items:center;gap:8px}
 .fin-module .fin-mini-toggle{display:inline-flex;background:var(--fin-card2);border:1px solid var(--fin-border);border-radius:6px;overflow:hidden}
 .fin-module .fin-mini-btn{background:transparent;border:none;padding:4px 10px;font-size:10px;font-weight:600;color:var(--fin-muted);cursor:pointer;font-family:var(--font);transition:all .15s}
 .fin-module .fin-mini-btn:hover{color:var(--fin-text)}
@@ -661,8 +627,6 @@ tr.r-done td{opacity:.5}
   .fin-module .fin-collapse{margin-top:10px;font-size:11px}
   .fin-module .fin-collapse>summary{padding:9px 11px}
   .fin-module .fin-collapse-body{padding:2px 11px 10px}
-  .fin-module .classif-name{width:120px}
-  .fin-module .classif-val{width:80px;font-size:10px}
 }
 
 /* ===== LOGIN ===== */
@@ -1047,34 +1011,6 @@ tr.r-done td{opacity:.5}
                 <span class="fin-cal-leg-item"><span class="fin-cal-leg-chip crit"></span>&gt; 2× média</span>
                 <span class="fin-cal-leg-item"><span class="fin-cal-leg-chip overdue"></span>vencido (passado)</span>
               </div>
-            </div>
-          </div>
-
-          <div class="fin-section">
-            <div class="fin-section-header">
-              <div class="fin-section-title">Resumo Semanal <span class="periodo-filtro-tag" id="fin-week-month-label">—</span></div>
-            </div>
-            <div class="fin-section-body">
-              <div class="fin-week-wrap">
-                <table class="fin-week-table">
-                  <thead>
-                    <tr>
-                      <th>Semana</th><th>Período</th><th>Total</th><th>Lançamentos</th><th>Maior saída do dia</th><th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody id="fin-week-tbody"></tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          <div class="fin-section">
-            <div class="fin-section-header">
-              <div class="fin-section-title">Top 15 Categorias <span class="periodo-filtro-tag" id="fin-classif-periodo-tag">Todos os períodos</span></div>
-              <button class="fin-clear-selection" id="fin-clear-selection" type="button" style="display:none">✕ Limpar seleção</button>
-            </div>
-            <div class="fin-section-body">
-              <div id="fin-classif-list"></div>
             </div>
           </div>
 
@@ -2052,7 +1988,6 @@ window.switchModule=function(name){
     if(window.finRecalcKPIs)window.finRecalcKPIs([]);
     if(window.finRenderChart)window.finRenderChart([]);
     if(window.finRenderCalendar)window.finRenderCalendar([]);
-    if(window.finRenderWeekSummary)window.finRenderWeekSummary([]);
     if(window.finRenderAlertas)window.finRenderAlertas([]);
     if(window.finRenderAportes)window.finRenderAportes([]);
     window._finReady=true;
@@ -2746,21 +2681,9 @@ function expandBusca(busca){
   'use strict';
   const FIXAS=['ALUGUEL','CONDOMINIO','SALARIO','FOLHA','FGTS','INSS','IRRF','SIMPLES','ICMS','EMPRESTIMO','FINANCIAMENTO','SISTEMA','ENERGIA','AGUA','INTERNET','TELEFONE','SINDICATO','SEGURO','FRANQUIA','ROYALTIES','FUNDO','ARMAÇÕES','ARMACOES','LENTES'];
   let _dados=[], _state={dtInicio:null,dtFim:null,tipo:null,razao:null,alerta:false,busca:'',filtroClassif:'',filtroDataExtra:null};
-  let _treeState={}; // {[raiz]:{open:bool, subs:{[sub]:{open:bool}}}}
   // Normaliza string para busca: lowercase + remove acentos (combining marks U+0300-U+036F)
   function normalize(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}
   function escHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-  function resetTreeState(){_treeState={};}
-  function toggleTreeNode(raiz,sub){
-    if(!_treeState[raiz])_treeState[raiz]={open:false,subs:{}};
-    if(sub===undefined){
-      _treeState[raiz].open=!_treeState[raiz].open;
-    }else{
-      if(!_treeState[raiz].subs[sub])_treeState[raiz].subs[sub]={open:false};
-      _treeState[raiz].subs[sub].open=!_treeState[raiz].subs[sub].open;
-    }
-    render();
-  }
   // getSubRaiz: definido em escopo de módulo (compartilhado com a IIFE de upload)
   function parseDate(s){if(!s)return null;const p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
   function brl(v){return 'R$ '+(+v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
@@ -2823,10 +2746,9 @@ function expandBusca(busca){
     return parts.join(' · ');
   }
   function render(){
-    const rows=getFiltered();             // Dashboard (KPIs, Top 15, FixVar, etc.)
+    const rows=getFiltered();             // Dashboard (KPIs, Por Classificação, etc.)
     const tableRows=getTableFiltered();   // Tabela (acumula filtroClassif + filtroDataExtra)
     const label=filtroLabel();
-    renderClassif(rows,label);
     renderBalancete(rows,label);
     renderTabela(tableRows);
     renderTotal(tableRows);
@@ -2843,7 +2765,7 @@ function expandBusca(busca){
         bar.style.display='none';
       }
     }
-    // Dashboard reativo aos filtros (KPIs + chart semanal + calendário + resumo semanal)
+    // Dashboard reativo aos filtros (KPIs + chart semanal + calendário)
     // Tudo passa o conjunto SEM o filtroDataExtra (esse é só da tabela)
     if(window.finRecalcKPIs){
       const filtro=buildFiltroCompletoLabel();
@@ -2851,82 +2773,6 @@ function expandBusca(busca){
     }
     if(window.finRenderChart)window.finRenderChart(rows);
     if(window.finRenderCalendar)window.finRenderCalendar(rows);
-    if(window.finRenderWeekSummary)window.finRenderWeekSummary(rows);
-  }
-  // Helper para gerar a barra bicolor (atrasado vermelho + a vencer azul)
-  function bicolorBar(total,atr,ven,maxLevel){
-    const wPct=Math.min(maxLevel>0?(total/maxLevel*100):0,100).toFixed(1);
-    const aPct=total>0?(atr/total*100).toFixed(2):0;
-    const vPct=total>0?(ven/total*100).toFixed(2):0;
-    const tip=`Atrasado: ${brl(atr)} | A vencer: ${brl(ven)}`;
-    const segs=(atr>0?`<div class="bar-seg-atr" style="width:${aPct}%"></div>`:'')+
-               (ven>0?`<div class="bar-seg-ven" style="width:${vPct}%"></div>`:'');
-    return `<div class="classif-bar-wrap" title="${tip}"><div class="classif-bar" style="width:${wPct}%">${segs}</div></div>`;
-  }
-  function renderClassif(rows,label){
-    Q('fin-classif-periodo-tag').textContent=label;
-    // Constrói árvore com totais separados em atrasado vs a vencer
-    const tree={};
-    rows.forEach(r=>{
-      const raiz = (typeof getRaizDaClassificacao==='function') ? getRaizDaClassificacao(r.classif) : 'SEM CLASSIFICAÇÃO';
-      const sub  = (typeof getSubRaiz==='function' ? getSubRaiz(raiz,r.classif) : null) || 'SEM SUB-CLASSIFICAÇÃO';
-      const bucket = r.periodo==='ATRASADO' ? 'atrasado' : 'vencer';
-      if(!tree[raiz])tree[raiz]={total:0,atrasado:0,vencer:0,subs:{}};
-      tree[raiz].total+=r.valor; tree[raiz][bucket]+=r.valor;
-      if(!tree[raiz].subs[sub])tree[raiz].subs[sub]={total:0,atrasado:0,vencer:0,detalhes:{}};
-      tree[raiz].subs[sub].total+=r.valor; tree[raiz].subs[sub][bucket]+=r.valor;
-      const det=tree[raiz].subs[sub].detalhes;
-      if(!det[r.classif])det[r.classif]={total:0,atrasado:0,vencer:0};
-      det[r.classif].total+=r.valor; det[r.classif][bucket]+=r.valor;
-    });
-    const raizes=Object.entries(tree).sort((a,b)=>b[1].total-a[1].total).slice(0,15);
-    const list=Q('fin-classif-list');
-    if(!raizes.length){
-      list.innerHTML='<div style="color:var(--fin-muted);font-size:12px">Nenhum lançamento no período.</div>';
-      const clearBtn=Q('fin-clear-selection'); if(clearBtn)clearBtn.style.display='none';
-      return;
-    }
-    const maxRaiz=raizes[0][1].total;
-    const buscaAtual=_state.busca||'';
-    let html='';
-    raizes.forEach(([raiz,raizData])=>{
-      const isOpen=!!(_treeState[raiz]&&_treeState[raiz].open);
-      const chev=isOpen?'▼':'▶';
-      html+=`<div class="classif-row lv-raiz" data-tree-level="raiz" data-raiz="${escHtml(raiz)}">
-        <span class="tree-chev">${chev}</span>
-        <div class="classif-name" title="${escHtml(raiz)}">${escHtml(raiz)}</div>
-        ${bicolorBar(raizData.total,raizData.atrasado,raizData.vencer,maxRaiz)}
-        <div class="classif-val">${brl(raizData.total)}</div>
-      </div>`;
-      if(!isOpen)return;
-      const subs=Object.entries(raizData.subs).sort((a,b)=>b[1].total-a[1].total);
-      const maxSub=subs.length?subs[0][1].total:0;
-      subs.forEach(([sub,subData])=>{
-        const subOpen=!!(_treeState[raiz]&&_treeState[raiz].subs[sub]&&_treeState[raiz].subs[sub].open);
-        const chevSub=subOpen?'▼':'▶';
-        html+=`<div class="classif-row lv-sub" data-tree-level="sub" data-raiz="${escHtml(raiz)}" data-sub="${escHtml(sub)}">
-          <span class="tree-chev">${chevSub}</span>
-          <div class="classif-name" title="${escHtml(sub)}">${escHtml(sub)}</div>
-          ${bicolorBar(subData.total,subData.atrasado,subData.vencer,maxSub)}
-          <div class="classif-val">${brl(subData.total)}</div>
-        </div>`;
-        if(!subOpen)return;
-        const dets=Object.entries(subData.detalhes).sort((a,b)=>b[1].total-a[1].total);
-        const maxDet=dets.length?dets[0][1].total:0;
-        dets.forEach(([classif,d])=>{
-          const isSel=classif===buscaAtual;
-          html+=`<div class="classif-row lv-det${isSel?' selected':''}" data-tree-level="det" data-classif="${escHtml(classif)}">
-            <span class="tree-chev">•</span>
-            <div class="classif-name" title="${escHtml(classif)}">${escHtml(classif)}</div>
-            ${bicolorBar(d.total,d.atrasado,d.vencer,maxDet)}
-            <div class="classif-val">${brl(d.total)}</div>
-          </div>`;
-        });
-      });
-    });
-    list.innerHTML=html;
-    const clearBtn=Q('fin-clear-selection');
-    if(clearBtn)clearBtn.style.display=buscaAtual?'inline-block':'none';
   }
   function renderSearchCounter(rows){
     const el=Q('fin-search-counter');
@@ -3057,7 +2903,6 @@ function expandBusca(busca){
     _state.dtInicio=parseDate(Q('fin-dt-inicio').value);
     _state.dtFim   =parseDate(Q('fin-dt-fim').value);
     document.querySelectorAll('.fin-module .filter-btn').forEach(b=>b.classList.remove('active'));
-    resetTreeState();
     resetBalanceteState();
     render();
   }
@@ -3071,7 +2916,6 @@ function expandBusca(busca){
     if(wrap)wrap.classList.remove('has-text');
     document.querySelectorAll('.fin-module .filter-btn').forEach(b=>b.classList.remove('active'));
     Q('fin-btn-todos').classList.add('active');
-    resetTreeState();
     resetBalanceteState();
     render();
   }
@@ -3103,7 +2947,6 @@ function expandBusca(busca){
     Q('fin-dt-inicio').value=diStr instanceof Date?diStr.toISOString().slice(0,10):diStr;
     Q('fin-dt-fim').value   =dfStr instanceof Date?dfStr.toISOString().slice(0,10):dfStr;
     Q(`fin-btn-${tipo}`).classList.add('active');
-    resetTreeState();
     resetBalanceteState();
     render();
   }
@@ -3140,7 +2983,6 @@ function expandBusca(busca){
   window.finInit=function(dados){
     _dados=dados||[];
     _state={dtInicio:null,dtFim:null,tipo:null,razao:null,alerta:false,busca:'',filtroClassif:'',filtroDataExtra:null};
-    resetTreeState();
     resetBalanceteState();
     populateClassifSelect();
     render();
@@ -3177,11 +3019,6 @@ function expandBusca(busca){
     if(searchClear){
       searchClear.onclick=()=>setBusca('');
     }
-    // Botão "Limpar seleção" no header do Top 15
-    const clearSel=Q('fin-clear-selection');
-    if(clearSel){
-      clearSel.onclick=()=>setBusca('');
-    }
     // Filtro de Classificação (afeta APENAS a tabela)
     const filtroClassif=Q('fin-filtro-classif');
     if(filtroClassif){
@@ -3207,24 +3044,6 @@ function expandBusca(busca){
         if(!tr)return;
         if(tr.classList.contains('bal-raiz'))toggleBalanceteNode(tr.dataset.raiz);
         else if(tr.classList.contains('bal-sub'))toggleBalanceteNode(tr.dataset.raiz,tr.dataset.sub);
-      });
-    }
-    // Clique na árvore do Top 15 (delegação): raiz/sub expandem; det filtra pela busca
-    const classifList=Q('fin-classif-list');
-    if(classifList){
-      classifList.addEventListener('click',e=>{
-        const row=e.target.closest('.classif-row');
-        if(!row)return;
-        const lvl=row.dataset.treeLevel;
-        if(lvl==='raiz'){
-          toggleTreeNode(row.dataset.raiz);
-        }else if(lvl==='sub'){
-          toggleTreeNode(row.dataset.raiz, row.dataset.sub);
-        }else if(lvl==='det' && row.dataset.classif){
-          // Toggle: se clicou no já selecionado, desseleciona
-          if(_state.busca===row.dataset.classif)setBusca('');
-          else setBusca(row.dataset.classif);
-        }
       });
     }
   };
@@ -3719,58 +3538,6 @@ function expandBusca(busca){
     grid.innerHTML=html;
   }
 
-  // ===== RESUMO SEMANAL =====
-  // Idem ao calendário: usa _calAllRows + filtro do seletor próprio (independente do dashboard).
-  function renderWeekSummary(rows){
-    const tbody=Q('fin-week-tbody'); if(!tbody)return;
-    Q('fin-week-month-label').textContent=labelPeriodoAtivo();
-    if(!_calAllRows.length){
-      tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--fin-muted);padding:20px">Sem dados.</td></tr>';
-      return;
-    }
-    const monthRows=getRowsCalendario();
-    if(!monthRows.length){
-      tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--fin-muted);padding:20px;font-style:italic">Nenhum vencimento neste período.</td></tr>';
-      return;
-    }
-    // Define semanas: agrupa por segunda
-    const weeks={};
-    monthRows.forEach(r=>{
-      const monday=mondayOf(ymdToDate(r.venc));
-      const key=dateToYmd(monday);
-      if(!weeks[key])weeks[key]={sum:0,count:0,porDia:{}};
-      weeks[key].sum+=r.valor;
-      weeks[key].count++;
-      if(!weeks[key].porDia[r.venc])weeks[key].porDia[r.venc]=0;
-      weeks[key].porDia[r.venc]+=r.valor;
-    });
-    const keys=Object.keys(weeks).sort();
-    const mediaSemana=keys.reduce((s,k)=>s+weeks[k].sum,0)/keys.length;
-    let html='';
-    keys.forEach((k,i)=>{
-      const w=weeks[k];
-      const sun=new Date(ymdToDate(k)); sun.setDate(sun.getDate()+6);
-      const periodLbl=`${fmtDDMM(k)} – ${String(sun.getDate()).padStart(2,'0')}/${String(sun.getMonth()+1).padStart(2,'0')}`;
-      const maiorDia=Object.entries(w.porDia).sort((a,b)=>b[1]-a[1])[0];
-      const maiorLbl=maiorDia?`${brl(maiorDia[1])} (${fmtDDMM(maiorDia[0])})`:'—';
-      let stat='ok',statLbl='Tranquilo';
-      if(mediaSemana>0){
-        const ratio=w.sum/mediaSemana;
-        if(ratio>1.5){stat='crit';statLbl='Crítico';}
-        else if(ratio>1.1){stat='warn';statLbl='Atenção';}
-      }
-      html+=`<tr>
-        <td>Sem ${i+1}</td>
-        <td>${periodLbl}</td>
-        <td class="num">${brl(w.sum)}</td>
-        <td class="num">${w.count}</td>
-        <td>${maiorLbl}</td>
-        <td><span class="fin-week-status ${stat}">${statLbl}</span></td>
-      </tr>`;
-    });
-    tbody.innerHTML=html;
-  }
-
   function renderAportes(aportes){
     const box=Q('fin-aporte-box');
     if(!box)return;
@@ -3946,7 +3713,6 @@ function expandBusca(busca){
     renderKPIs(rows);
     renderChart(rows);
     renderCalendar(rows);
-    renderWeekSummary(rows);
     renderAportes(aportes);
     renderAlertasDataweb(rows);
     if(rows.length){
@@ -4135,7 +3901,6 @@ function expandBusca(busca){
       _calMode='month';
       _calCurrentMonth=months[ni];
       renderCalendar();
-      renderWeekSummary();
     };
     const calPrev=Q('fin-cal-prev-mes'), calNext=Q('fin-cal-next-mes');
     if(calPrev && !calPrev.dataset.bound){calPrev.dataset.bound='1';calPrev.onclick=()=>navMonth(-1);}
@@ -4149,7 +3914,6 @@ function expandBusca(busca){
         _calMode='month';
         _calCurrentMonth=selMes.value;
         renderCalendar();
-        renderWeekSummary();
       });
     }
     // Toggle Modo: Por mês / Período livre
@@ -4179,7 +3943,6 @@ function expandBusca(busca){
           if(inAte)inAte.value=_calRange.ate||'';
         }
         renderCalendar();
-        renderWeekSummary();
       };
     });
     // Aplicar range
@@ -4194,7 +3957,6 @@ function expandBusca(busca){
         _calMode='range';
         _calRange={de,ate};
         renderCalendar();
-        renderWeekSummary();
       };
     }
     // Limpar range → volta ao Modo "Por mês"
@@ -4210,7 +3972,6 @@ function expandBusca(busca){
         const months=getMonthsInRange(_calAllRows||[]);
         if(!_calCurrentMonth || !months.includes(_calCurrentMonth))_calCurrentMonth=detectarMesPico(_calAllRows);
         renderCalendar();
-        renderWeekSummary();
       };
     }
     // Delegação: clique em raiz/sub do modal expande/colapsa; lanc não faz nada
@@ -4348,7 +4109,6 @@ function expandBusca(busca){
   window.finRecalcKPIs=renderKPIs;
   window.finRenderChart=renderChart;
   window.finRenderCalendar=renderCalendar;
-  window.finRenderWeekSummary=renderWeekSummary;
   window.finRenderAlertas=renderAlertasDataweb;
   window.finRenderAportes=renderAportes;
   window.finBindUpload=bind;
